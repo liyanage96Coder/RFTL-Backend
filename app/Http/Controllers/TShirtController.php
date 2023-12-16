@@ -27,6 +27,29 @@ class TShirtController extends Controller
         ]);
     }
 
+    function getAvailable(): JsonResponse
+    {
+        try {
+            $tShirts = TShirt::where('active', 1)->with(['bookings'])->get();
+            $availableTShirts = array();
+            foreach ($tShirts as $tShirt) {
+
+            }
+            return response()->json([
+                'error' => false,
+                'message' => 'Successfully retrieved t-shirts',
+                'tShirts' => TShirt::where('active', 1)->get()
+            ]);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+        }
+        return response()->json([
+            'error' => true,
+            'message' => 'An error occurred while getting t-shirts!',
+        ]);
+    }
+
     function get($id): JsonResponse
     {
         try {

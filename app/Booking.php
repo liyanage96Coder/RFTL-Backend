@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Booking extends Model
 {
@@ -14,5 +15,10 @@ class Booking extends Model
     public function tShirt(): BelongsTo
     {
         return $this->belongsTo(TShirt::class, 't_shirt_id');
+    }
+
+    public function bookingTShirts(): HasMany
+    {
+        return $this->hasMany(BookingTShirt::class)->where('active', true);
     }
 }

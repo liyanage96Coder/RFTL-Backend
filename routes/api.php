@@ -50,10 +50,14 @@ Route::group(["prefix" => 't-shirt'], function () {
 
 Route::group(["prefix" => 'booking'], function () {
     Route::get('/', 'BookingController@index')->middleware(['tokenVerification']);
+    Route::get('/group/', 'BookingController@indexGroup')->middleware(['tokenVerification']);
     Route::get('/{id}', 'BookingController@get')->middleware(['tokenVerification']);
     Route::get('/limit/{limit}', 'BookingController@getLimited')->middleware(['tokenVerification']);
+    Route::get('/group/limit/{limit}', 'BookingController@getGroupLimited')->middleware(['tokenVerification']);
     Route::post('/', 'BookingController@create');
     Route::post('/admin/', 'BookingController@adminCreate')->middleware(['tokenVerification']);
+    Route::post('/admin/group', 'BookingController@adminGroupCreate')->middleware(['tokenVerification']);
     Route::delete('/{id}', 'BookingController@delete')->middleware(['tokenVerification']);
     Route::post('/update/{id}', 'BookingController@update')->middleware(['tokenVerification']);
+    Route::post('/update/group/{id}', 'BookingController@updateGroup')->middleware(['tokenVerification']);
 });

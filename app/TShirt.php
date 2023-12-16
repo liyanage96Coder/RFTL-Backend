@@ -15,4 +15,9 @@ class TShirt extends Model
     {
         return $this->hasMany(Booking::class)->where('active', true);
     }
+
+    public function bookingTShirts(): HasMany
+    {
+        return $this->hasMany(BookingTShirt::class)->where('active', true);
+    }
 }
