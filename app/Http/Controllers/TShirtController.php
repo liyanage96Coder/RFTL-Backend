@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\BookingTShirt;
 use App\TShirt;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class TShirtController extends Controller
@@ -33,12 +35,22 @@ class TShirtController extends Controller
             $tShirts = TShirt::where('active', 1)->with(['bookings'])->get();
             $availableTShirts = array();
             foreach ($tShirts as $tShirt) {
-
+                $remaining = $tShirt->quantity - count($tShirt->bookings);
+                $sum = BookingTShirt::select(DB::raw('sum(quantity) as used_quantity'))
+                    ->where('t_shirt_id', $tShirt->id)
+                    ->where('active', true)
+                    ->get();
+                $remaining -= $sum[0]['used_quantity'];
+                if ($remaining > 0) {
+                    unset($tShirt['bookings']);
+                    $tShirt->remaining = $remaining;
+                    array_push($availableTShirts, $tShirt);
+                }
             }
             return response()->json([
                 'error' => false,
                 'message' => 'Successfully retrieved t-shirts',
-                'tShirts' => TShirt::where('active', 1)->get()
+                'tShirts' => $availableTShirts
             ]);
         } catch (\Exception $e) {
             Log::error($e->getMessage());

@@ -112,6 +112,54 @@ class BookingController extends Controller
         ]);
     }
 
+    function getDashboard(): JsonResponse
+    {
+        try {
+            $bookings = Booking::where('active', 1)->where('is_group', false)->get();
+            $groupBookings = Booking::where('active', 1)->where('is_group', true)->with(['bookingTShirts'])->get();
+            $cashDonations = 0.00;
+            $onlineDonations = 0.00;
+            $individualParticipants = 0;
+            $groupParticipants = 0;
+
+            foreach ($bookings as $booking) {
+                $individualParticipants += 1;
+                if ($booking->payment_type === "Cash") {
+                    $cashDonations += $booking->donation;
+                } else {
+                    $onlineDonations += $booking->donation;
+                }
+            }
+
+            foreach ($groupBookings as $groupBooking) {
+                foreach ($groupBooking->bookingTShirts as $booking_t_shirt) {
+                    $groupParticipants += $booking_t_shirt->quantity;
+                }
+                if ($groupBooking->payment_type === "Cash") {
+                    $cashDonations += $groupBooking->donation;
+                } else {
+                    $onlineDonations += $groupBooking->donation;
+                }
+            }
+
+            return response()->json([
+                'error' => false,
+                'message' => 'Successfully retrieved bookings',
+                'cashDonations' => $cashDonations,
+                'onlineDonations' => $onlineDonations,
+                'individualParticipants' => $individualParticipants,
+                'groupParticipants' => $groupParticipants
+            ]);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+        }
+        return response()->json([
+            'error' => true,
+            'message' => 'An error occurred while getting bookings!',
+        ]);
+    }
+
     function create(Request $request): JsonResponse
     {
         try {
@@ -189,6 +237,10 @@ class BookingController extends Controller
         try {
             $booking = Booking::findOrFail($id);
             $booking->update(['active' => false]);
+
+            if ($booking->is_group) {
+                BookingTShirt::where('booking_id', $booking->id)->update(['active' => false]);
+            }
 
             return response()->json([
                 'error' => false,

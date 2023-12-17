@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class BookingTShirt extends Model
 {
+    protected $fillable = [
+        'active'
+    ];
+
     public function tShirt(): BelongsTo
     {
         return $this->belongsTo(TShirt::class, 't_shirt_id');
