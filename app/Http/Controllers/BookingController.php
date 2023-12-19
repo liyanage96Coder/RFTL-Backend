@@ -153,10 +153,8 @@ class BookingController extends Controller
                     ->where('active', true)
                     ->get();
                 $remaining -= $sum[0]['used_quantity'];
-                if ($remaining > 0) {
-                    unset($tShirt['bookings']);
-                    $tShirt->remaining = $remaining;
-                }
+                unset($tShirt['bookings']);
+                $tShirt->remaining = $remaining;
             }
 
             return response()->json([
@@ -225,7 +223,7 @@ class BookingController extends Controller
             return response()->json([
                 'error' => false,
                 'message' => 'Successfully created booking',
-                'booking' => $newBooking
+                'booking' => Booking::where('id', $newBooking->id)->with(['tShirt'])->first()
             ]);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -249,7 +247,7 @@ class BookingController extends Controller
             return response()->json([
                 'error' => false,
                 'message' => 'Successfully created booking',
-                'booking' => $newBooking
+                'booking' => Booking::where('id', $newBooking->id)->with(['tShirt'])->first()
             ]);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -318,7 +316,7 @@ class BookingController extends Controller
             return response()->json([
                 'error' => false,
                 'message' => 'Successfully updated booking',
-                'booking' => $booking
+                'booking' => Booking::where('id', $booking->id)->with(['tShirt'])->first()
             ]);
         } catch (\Exception $e) {
             Log::error($e->getMessage());

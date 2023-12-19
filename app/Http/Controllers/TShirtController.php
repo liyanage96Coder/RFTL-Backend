@@ -41,11 +41,9 @@ class TShirtController extends Controller
                     ->where('active', true)
                     ->get();
                 $remaining -= $sum[0]['used_quantity'];
-                if ($remaining > 0) {
-                    unset($tShirt['bookings']);
-                    $tShirt->remaining = $remaining;
-                    array_push($availableTShirts, $tShirt);
-                }
+                unset($tShirt['bookings']);
+                $tShirt->remaining = $remaining;
+                array_push($availableTShirts, $tShirt);
             }
             return response()->json([
                 'error' => false,
