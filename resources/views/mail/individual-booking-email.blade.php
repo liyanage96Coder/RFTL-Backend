@@ -356,11 +356,11 @@
             <div class="registData">
                 <div class="lineSingle">
                     <span class="lineRow-person">Registration Fee :</span>
-                    <span class="lineRow-person">LKR 1400</span>
+                    <span class="lineRow-person">LKR 1600</span>
                 </div>
                 <div class="lineSingle">
                     <span class="lineRow-person">Extra Donation :</span>
-                    <span class="lineRow-person">LKR {{ $booking->donation - 1400 }}</span>
+                    <span class="lineRow-person">LKR {{ $booking->donation - 1600 }}</span>
                 </div>
             </div>
 

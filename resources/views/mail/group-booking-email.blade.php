@@ -500,11 +500,11 @@
             <div class="registData">
                 <div class="lineSingle">
                     <span class="lineRow-person">Registration Fee :</span>
-                    <span class="lineRow-person">LKR {{ $booking->member_count * 1400 }}</span>
+                    <span class="lineRow-person">LKR {{ $booking->member_count * 1600 }}</span>
                 </div>
                 <div class="lineSingle">
                     <span class="lineRow-person">Extra Donation :</span>
-                    <span class="lineRow-person">LKR {{ $booking->donation - ($booking->member_count * 1400) }}</span>
+                    <span class="lineRow-person">LKR {{ $booking->donation - ($booking->member_count * 1600) }}</span>
                 </div>
             </div>
 
