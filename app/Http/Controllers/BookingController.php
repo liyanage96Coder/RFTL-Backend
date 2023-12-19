@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Booking;
 use App\BookingTShirt;
+use App\TShirt;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class BookingController extends Controller
 {
@@ -117,6 +120,7 @@ class BookingController extends Controller
         try {
             $bookings = Booking::where('active', 1)->where('is_group', false)->get();
             $groupBookings = Booking::where('active', 1)->where('is_group', true)->with(['bookingTShirts'])->get();
+            $tShirts = TShirt::where('active', 1)->with(['bookings'])->get();
             $cashDonations = 0.00;
             $onlineDonations = 0.00;
             $individualParticipants = 0;
@@ -142,13 +146,27 @@ class BookingController extends Controller
                 }
             }
 
+            foreach ($tShirts as $tShirt) {
+                $remaining = $tShirt->quantity - count($tShirt->bookings);
+                $sum = BookingTShirt::select(DB::raw('sum(quantity) as used_quantity'))
+                    ->where('t_shirt_id', $tShirt->id)
+                    ->where('active', true)
+                    ->get();
+                $remaining -= $sum[0]['used_quantity'];
+                if ($remaining > 0) {
+                    unset($tShirt['bookings']);
+                    $tShirt->remaining = $remaining;
+                }
+            }
+
             return response()->json([
                 'error' => false,
-                'message' => 'Successfully retrieved bookings',
+                'message' => 'Successfully retrieved dashboard stats',
                 'cashDonations' => $cashDonations,
                 'onlineDonations' => $onlineDonations,
                 'individualParticipants' => $individualParticipants,
-                'groupParticipants' => $groupParticipants
+                'groupParticipants' => $groupParticipants,
+                'tShirts' => $tShirts
             ]);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -156,7 +174,42 @@ class BookingController extends Controller
         }
         return response()->json([
             'error' => true,
-            'message' => 'An error occurred while getting bookings!',
+            'message' => 'An error occurred while getting dashboard stats!',
+        ]);
+    }
+
+    function sendEmail($id): JsonResponse
+    {
+        try {
+            $booking = Booking::where('id', $id)
+                ->with(['tShirt', 'bookingTShirts', 'bookingTShirts.tShirt'])
+                ->first();
+
+            $data = array('booking' => $booking);
+            if ($booking->is_group) {
+                $booking->member_count = 0;
+                foreach ($booking->bookingTShirts as $bookingTShirt) {
+                    $booking->member_count += $bookingTShirt->quantity;
+                }
+                Mail::send('mail.group-booking-email', $data, function ($message) use ($booking) {
+                    $message->to($booking->email, ucwords($booking->full_name))->subject('Thank you for your contribution');
+                });
+            } else {
+                Mail::send('mail.individual-booking-email', $data, function ($message) use ($booking) {
+                    $message->to($booking->email, ucwords($booking->full_name))->subject('Thank you for your contribution');
+                });
+            }
+            return response()->json([
+                'error' => false,
+                'message' => 'Successfully sent booking email',
+            ]);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+        }
+        return response()->json([
+            'error' => true,
+            'message' => 'An error occurred while sending booking email!',
         ]);
     }
 
@@ -220,7 +273,7 @@ class BookingController extends Controller
             return response()->json([
                 'error' => false,
                 'message' => 'Successfully created booking',
-                'booking' => Booking::where('id', $newBooking->id)->with(['bookingTShirts'])->first()
+                'booking' => Booking::where('id', $newBooking->id)->with(['bookingTShirts', 'bookingTShirts.tShirt'])->first()
             ]);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -286,7 +339,7 @@ class BookingController extends Controller
             return response()->json([
                 'error' => false,
                 'message' => 'Successfully updated booking',
-                'booking' => Booking::where('id', $booking->id)->with(['bookingTShirts'])->first()
+                'booking' => Booking::where('id', $booking->id)->with(['bookingTShirts', 'bookingTShirts.tShirt'])->first()
             ]);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
