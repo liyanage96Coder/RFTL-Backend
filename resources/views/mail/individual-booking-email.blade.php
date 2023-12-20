@@ -115,28 +115,26 @@
             color: #E53F71;
         }
 
-        .personDetail .lineSingle {
+        .d-flex {
             display: flex;
             flex-direction: row;
-            align-items: flex-start;
+            align-items: center;
             justify-content: space-between;
             margin-bottom: 20px;
+            width: 100%;
         }
 
-        .personDetail .lineSingle span {
-            display: block;
-        }
-
-        .personDetail .lineSingle span:first-child {
+        .d-flex > div {
             color: #393939;
             font-family: 'Inter', sans-serif;
             font-size: 13px;
             font-style: normal;
             font-weight: 400;
             line-height: 14px; /* 107.692% */
+            width: 50%;
         }
 
-        .personDetail .lineSingle span:last-child {
+        .d-flex > div.last-div {
             color: #383838;
             text-align: right;
             font-family: 'Inter', sans-serif;
@@ -146,86 +144,12 @@
             line-height: 14px; /* 107.692% */
         }
 
-        .personDetail .lineSingle:last-child {
-            padding-bottom: 24px;
-            border-bottom: 2px solid #E7E7E7;
-            margin-bottom: 24px;
-        }
-
-        .tSize .lineSingle {
-            display: flex;
-            flex-direction: row;
-            align-items: flex-start;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .tSize .lineSingle span {
-            display: block;
-            color: #7D7D7D;
+        .d-flex > div.booking-id {
             font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            font-style: normal;
             font-weight: 500;
-            line-height: 14px; /* 100% */
         }
 
-        .tSize .lineSingle:last-child {
-            padding-bottom: 24px;
-            border-bottom: 2px solid #E7E7E7;
-            margin-bottom: 24px;
-        }
-
-        .registData .lineSingle {
-            display: flex;
-            flex-direction: row;
-            align-items: flex-start;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .registData .lineSingle span {
-            display: block;
-        }
-
-        .registData .lineSingle span:first-child {
-            color: #7D7D7D;
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            font-style: normal;
-            font-weight: 600;
-            line-height: 14px; /* 100% */
-        }
-
-        .registData .lineSingle span:last-child {
-            color: #383838;
-            text-align: right;
-            font-family: 'Inter', sans-serif;
-            font-size: 13px;
-            font-style: normal;
-            font-weight: 600;
-            line-height: 14px; /* 107.692% */
-        }
-
-        .registData .lineSingle:last-child {
-            padding-bottom: 24px;
-            border-bottom: 2px solid #E7E7E7;
-            margin-bottom: 24px;
-        }
-
-        .totDonation .lineSingle {
-            display: flex;
-            flex-direction: row;
-            align-items: flex-start;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .totDonation .lineSingle span {
-            display: block;
-        }
-
-        .totDonation .lineSingle span:first-child {
+        .total-donation > div > div, .total-donation > div > div.last-div {
             color: #E53F71;
             font-family: 'Inter', sans-serif;
             font-size: 18px;
@@ -234,14 +158,12 @@
             line-height: 14px; /* 77.778% */
         }
 
-        .totDonation .lineSingle span:last-child {
-            color: #E54E7B;
-            text-align: center;
-            font-family: 'Inter', sans-serif;
-            font-size: 18px;
-            font-style: normal;
-            font-weight: 700;
-            line-height: 14px; /* 77.778% */
+        .border-bottom {
+            border-bottom: 2px solid #D7D7D7;
+            padding-top: 24px;
+            margin-top: 24px;
+            padding-bottom: 24px;
+            margin-bottom: 24px;
         }
 
         @media (min-width: 576px) {
@@ -311,90 +233,96 @@
             </p>
         </div>
         <div class="light-background">
-            <div class="tSize">
-                <div class="lineSingle">
-                    <span class="lineRow-person">{{ $booking->created_at->format('F d, Y') }}</span>
-                    <span class="lineRow-person">Booking ID : {{ $booking->reference }}</span>
+            <div class="border-bottom">
+                <div class="d-flex">
+                    <div>{{ $booking->created_at->format('F d, Y') }}</div>
+                    <div class="last-div booking-id">Booking ID : {{ $booking->reference }}</div>
                 </div>
-                <div class="lineSingle">
+                <div>
                     <h2 class="lineRow-person">Billing Summary</h2>
                 </div>
             </div>
-            <div class="personDetail">
-                <div class="lineSingle">
-                    <span class="lineRow-person">Full Name :</span>
-                    <span class="lineRow-person">{{ $booking->full_name }}</span>
+            <div class="border-bottom">
+                <div class="d-flex">
+                    <div>Full Name :</div>
+                    <div class="last-div">{{ $booking->full_name }}</div>
                 </div>
-                <div class="lineSingle">
-                    <span class="lineRow-person">Date of Birth :</span>
-                    <span class="lineRow-person">{{ $booking->date_of_birth }}</span>
+                <div class="d-flex">
+                    <div>Date of Birth :</div>
+                    <div class="last-div">{{ $booking->date_of_birth }}</div>
                 </div>
-                <div class="lineSingle">
-                    <span class="lineRow-person">Contact Number :</span>
-                    <span class="lineRow-person">{{ $booking->phone }}</span>
+                <div class="d-flex">
+                    <div>Contact Number :</div>
+                    <div class="last-div">{{ $booking->phone }}</div>
                 </div>
-                <div class="lineSingle">
-                    <span class="lineRow-person">Email Address :</span>
-                    <span class="lineRow-person">{{ $booking->email }}</span>
-                </div>
-            </div>
-
-            <div class="tSize">
-                <div class="lineSingle">
-                    <span class="lineRow-person">T-Shirt Size</span>
-                    <span class="lineRow-person" style="font-weight: normal">Payment Method</span>
-                </div>
-                <div class="lineSingle">
-                    <span
-                        class="lineRow-person"
-                        style="font-weight: bold; color: #383838">{{ $booking->tShirt ? $booking->tShirt->description : "No T-Shirt" }}</span>
-                    <span class="lineRow-person"
-                          style="font-weight: bold; color: #383838">{{ $booking->payment_type }}</span>
+                <div class="d-flex">
+                    <div>Email Address :</div>
+                    <div class="last-div">{{ $booking->email }}</div>
                 </div>
             </div>
 
-            <div class="registData">
-                <div class="lineSingle">
-                    <span class="lineRow-person">Registration Fee :</span>
-                    <span class="lineRow-person">LKR 1600</span>
+            <div class="border-bottom">
+                <div class="d-flex">
+                    <div>T-Shirt Size</div>
+                    <div class="last-div" style="font-weight: normal">Payment Method</div>
                 </div>
-                <div class="lineSingle">
-                    <span class="lineRow-person">Extra Donation :</span>
-                    <span class="lineRow-person">LKR {{ $booking->donation - 1600 }}</span>
+                <div class="d-flex">
+                    <div style="font-weight: bold; color: #383838">
+                        {{ $booking->tShirt ? $booking->tShirt->description : "No T-Shirt" }}
+                    </div>
+                    <div class="last-div" style="font-weight: bold; color: #383838">
+                        {{ $booking->payment_type }}
+                    </div>
                 </div>
             </div>
 
-            <div class="totDonation">
-                <div class="lineSingle">
-                    <span class="lineRow-person">Donation Amount :</span>
-                    <span class="lineRow-person">LKR {{ $booking->donation }}</span>
+            <div class="border-bottom">
+                <div class="d-flex">
+                    <div>Registration Fee :</div>
+                    <div class="last-div">LKR 1600</div>
+                </div>
+                <div class="d-flex">
+                    <div>Extra Donation :</div>
+                    <div class="last-div">LKR {{ $booking->donation - 1600 }}</div>
                 </div>
             </div>
-            <div class="personDetail">
-                <div class="lineSingle" style="border-top: 2px solid #E7E7E7; padding-top: 24px">
-                    <span class="lineRow-person" style="width: 50%">
+
+            <div class="border-bottom total-donation">
+                <div class="d-flex">
+                    <div>Donation Amount :</div>
+                    <div class="last-div">LKR {{ $booking->donation }}</div>
+                </div>
+            </div>
+            <div class="border-bottom">
+                <div class="d-flex">
+                    <div style="width: 50%">
                         <strong>
                             Scan the QR Code to confirm your participation in the annual RFTL Charity Run - 2024.
                         </strong>
                         <br/><br/>
                         This is for one time use only and is non-transferrable. Please note that in the event of loss or
                         misplacement of receipt, you will be denied entry to the event.
-                    </span>
-                    <span class="lineRow-person">
-                        {!! QrCode::size(80)->generate('https://rftl.com/booking/' . base64_encode($booking->reference)) !!}
-                    </span>
+                    </div>
+                    <div class="last-div">
+                        @php
+                        $booking_link = 'https://rftl.com/booking/' . base64_encode($booking->reference);
+                        @endphp
+                        <img
+                            src="{!!$message->embedData(QrCode::format('png')->generate($booking_link), 'QrCode.png', 'image/png')!!}">
+                    </div>
                 </div>
+                <p>
+                    If you have any questions or inquiries, please don’t hesitate to contact us via email
+                    (rftl.charityrun@gmail.com) or contact number (+94) 76 232 8714.
+                </p>
+                <br/>
+                <p>
+                    <strong>Thank you for your contributions</strong><br/>
+                    Rotaract Club Colombo Uptown (RCCU)
+                </p>
             </div>
-            <p>
-                If you have any questions or inquiries, please don’t hesitate to contact us via email
-                (rftl.charityrun@gmail.com) or contact number (+94) 76 232 8714.
-            </p>
-            <br/>
-            <p>
-                <strong>Thank you for your contributions</strong><br/>
-                Rotaract Club Colombo Uptown (RCCU)
-            </p>
         </div>
     </div>
+</div>
 </body>
 </html>
