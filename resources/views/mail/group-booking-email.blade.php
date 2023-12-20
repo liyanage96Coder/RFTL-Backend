@@ -173,6 +173,10 @@
             margin-bottom: 24px;
         }
 
+        .qr-text {
+            width: 50%;
+        }
+
         @media (min-width: 576px) {
             .container {
                 max-width: 540px;
@@ -205,6 +209,7 @@
         @media (max-width: 576px) {
             h1 {
                 font-size: 1.5rem;
+                line-height: 1.2;
             }
 
             body {
@@ -214,6 +219,10 @@
 
             .logo {
                 width: 50%;
+            }
+
+            .qr-text {
+                width: 100%;
             }
         }
     </style>
@@ -327,7 +336,7 @@
             </div>
             <div class="border-bottom">
                 <div class="d-flex">
-                    <div style="width: 50%">
+                    <div class="qr-text">
                         <strong>
                             Scan the QR Code to confirm your participation in the annual RFTL Charity Run - 2024.
                         </strong>
