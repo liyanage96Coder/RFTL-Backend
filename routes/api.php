@@ -64,3 +64,15 @@ Route::group(["prefix" => 'booking'], function () {
     Route::post('/update/{id}', 'BookingController@update')->middleware(['tokenVerification']);
     Route::post('/update/group/{id}', 'BookingController@updateGroup')->middleware(['tokenVerification']);
 });
+
+Route::group(["prefix" => 'user'], function () {
+    Route::get('/', 'UserController@index')->middleware(['tokenVerification', 'adminVerification']);
+    Route::get('/{id}', 'UserController@get')->middleware(['tokenVerification', 'adminVerification']);
+    Route::post('/', 'UserController@create')->middleware(['tokenVerification', 'adminVerification']);
+    Route::delete('/{id}', 'UserController@delete')->middleware(['tokenVerification', 'adminVerification']);
+    Route::post('/update/{id}', 'UserController@update')->middleware(['tokenVerification', 'adminVerification']);
+});
+
+Route::group(["prefix" => 'role'], function () {
+    Route::get('/', 'RoleController@index')->middleware(['tokenVerification', 'adminVerification']);
+});
