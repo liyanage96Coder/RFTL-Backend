@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-    <link rel="icon" href="https://rftl.com/assets/images/favicon.svg"/>
+    <link rel="icon" href="https://rftl.lk/assets/images/logo.svg"/>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -230,7 +230,7 @@
 <body>
 <header>
     <div class="container">
-        <img src="https://rftl.com/assets/images/logo.png" alt="Logo" class="logo"/>
+        <img src="https://rftl.lk/assets/images/logo.png" alt="Logo" class="logo"/>
     </div>
 </header>
 <div id="body">
@@ -346,7 +346,7 @@
                     </div>
                     <div class="last-div">
                         @php
-                        $booking_link = 'https://rftl.com/booking/' . base64_encode($booking->reference);
+                        $booking_link = 'https://rftl.lk/booking/' . base64_encode($booking->reference);
                         @endphp
                         <img
                             src="{!!$message->embedData(QrCode::format('png')->generate($booking_link), 'QrCode.png', 'image/png')!!}">
