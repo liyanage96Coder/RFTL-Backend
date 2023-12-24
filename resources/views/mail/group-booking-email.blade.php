@@ -217,10 +217,6 @@
                 padding: 0;
             }
 
-            .logo {
-                width: 50%;
-            }
-
             .qr-text {
                 width: 100%;
             }
