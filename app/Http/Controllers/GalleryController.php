@@ -27,6 +27,30 @@ class GalleryController extends Controller
         ]);
     }
 
+    function getOnTags(): JsonResponse
+    {
+        try {
+            $tags = Gallery::select('tag')->distinct()->get();
+            $returnArray = array();
+            foreach ($tags as $tag) {
+                $returnArray[$tag->tag] = Gallery::where('active', 1)->where('tag', $tag->tag)->get();
+            }
+            return response()->json(array_merge($returnArray, [
+                'error' => false,
+                'message' => 'Successfully retrieved gallery',
+                'all' => Gallery::where('active', 1)->get(),
+                'tags' => $tags
+            ]));
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+        }
+        return response()->json([
+            'error' => true,
+            'message' => 'An error occurred while getting gallery!',
+        ]);
+    }
+
     function get($id): JsonResponse
     {
         try {

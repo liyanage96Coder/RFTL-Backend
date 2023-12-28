@@ -235,6 +235,30 @@ class BookingController extends Controller
         ]);
     }
 
+    function createGroup(Request $request): JsonResponse
+    {
+        try {
+            $newBooking = new Booking();
+            $newBooking->reference = $this->bookingReferenceGenerate();
+            $newBooking->status = "Payment Pending";
+            $newBooking->payment_type = "WebXPay";
+            $this->getGroupData($request, $newBooking);
+
+            return response()->json([
+                'error' => false,
+                'message' => 'Successfully created booking',
+                'booking' => Booking::where('id', $newBooking->id)->with(['bookingTShirts', 'bookingTShirts.tShirt'])->first()
+            ]);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+        }
+        return response()->json([
+            'error' => true,
+            'message' => 'An error occurred while creating booking!',
+        ]);
+    }
+
     function adminCreate(Request $request): JsonResponse
     {
         try {

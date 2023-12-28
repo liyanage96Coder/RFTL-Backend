@@ -32,6 +32,7 @@ Route::group(["prefix" => 'partner'], function () {
 
 Route::group(["prefix" => 'gallery'], function () {
     Route::get('/', 'GalleryController@index');
+    Route::get('/tags/', 'GalleryController@getOnTags');
     Route::get('/{id}', 'GalleryController@get');
     Route::get('/limit/{limit}', 'GalleryController@getLimited');
     Route::post('/', 'GalleryController@create')->middleware(['tokenVerification', 'adminVerification']);
@@ -58,6 +59,7 @@ Route::group(["prefix" => 'booking'], function () {
     Route::get('/group/limit/{limit}', 'BookingController@getGroupLimited')->middleware(['tokenVerification']);
     Route::get('/admin/dashboard/', 'BookingController@getDashboard')->middleware(['tokenVerification', 'adminVerification']);
     Route::post('/', 'BookingController@create');
+    Route::post('/group/', 'BookingController@createGroup');
     Route::post('/admin/', 'BookingController@adminCreate')->middleware(['tokenVerification']);
     Route::post('/admin/group', 'BookingController@adminGroupCreate')->middleware(['tokenVerification']);
     Route::delete('/{id}', 'BookingController@delete')->middleware(['tokenVerification']);
@@ -75,4 +77,13 @@ Route::group(["prefix" => 'user'], function () {
 
 Route::group(["prefix" => 'role'], function () {
     Route::get('/', 'RoleController@index')->middleware(['tokenVerification', 'adminVerification']);
+});
+
+Route::group(["prefix" => 'contact-us'], function () {
+    Route::get('/', 'ContactUsController@index')->middleware('tokenVerification');
+    Route::get('/{id}', 'ContactUsController@get')->middleware('tokenVerification');
+    Route::get('/limit/{limit}', 'ContactUsController@getLimited')->middleware('tokenVerification');
+    Route::post('/', 'ContactUsController@create');
+    Route::delete('/{id}', 'ContactUsController@delete')->middleware('tokenVerification');
+    Route::post('/update/{id}', 'ContactUsController@update')->middleware('tokenVerification');
 });
