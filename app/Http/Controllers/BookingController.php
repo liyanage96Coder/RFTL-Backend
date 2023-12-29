@@ -220,10 +220,30 @@ class BookingController extends Controller
             $newBooking->payment_type = "WebXPay";
             $this->getData($request, $newBooking);
 
+            $newBooking = Booking::where('id', $newBooking->id)->with(['tShirt'])->first();
+
+            // unique_order_id|total_amount
+            $plainText = $newBooking->reference . '|' . $newBooking->donation;
+            $publicKey = "-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDniLV80g3ykBFTO5vrtXJDKAua
+ri5V0RzyXmGV1K50jAajatNYzuiegeSdMVtWXqvkSjWmQJsv+njyMdPBeZBvN627
+NZCIzqESCrtyZkqSf4W7iWKFWbbIY3Gt5NxMHQMce/wZ9HWN1h1xExo2nGZoxrt6
+M6I7xoABOUNYDzullQIDAQAB
+-----END PUBLIC KEY-----";
+            //load public key for encrypting
+            openssl_public_encrypt($plainText, $encrypt, $publicKey);
+
+            //encode for data passing
+            $payment = base64_encode($encrypt);
+
+            $newBooking->custom_fields = base64_encode($newBooking->reference . "|" . $newBooking->full_name . "|" . $newBooking->email . "|" . $newBooking->phone);
+            $newBooking->secret_key = "28f03cfe-5a90-455c-af5e-88d821cb0d59";
+            $newBooking->payment = $payment;
+
             return response()->json([
                 'error' => false,
                 'message' => 'Successfully created booking',
-                'booking' => Booking::where('id', $newBooking->id)->with(['tShirt'])->first()
+                'booking' => $newBooking
             ]);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -244,10 +264,30 @@ class BookingController extends Controller
             $newBooking->payment_type = "WebXPay";
             $this->getGroupData($request, $newBooking);
 
+            $newBooking = Booking::where('id', $newBooking->id)->with(['bookingTShirts', 'bookingTShirts.tShirt'])->first();
+
+            // unique_order_id|total_amount
+            $plainText = $newBooking->reference . '|' . $newBooking->donation;
+            $publicKey = "-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDniLV80g3ykBFTO5vrtXJDKAua
+ri5V0RzyXmGV1K50jAajatNYzuiegeSdMVtWXqvkSjWmQJsv+njyMdPBeZBvN627
+NZCIzqESCrtyZkqSf4W7iWKFWbbIY3Gt5NxMHQMce/wZ9HWN1h1xExo2nGZoxrt6
+M6I7xoABOUNYDzullQIDAQAB
+-----END PUBLIC KEY-----";
+            //load public key for encrypting
+            openssl_public_encrypt($plainText, $encrypt, $publicKey);
+
+            //encode for data passing
+            $payment = base64_encode($encrypt);
+
+            $newBooking->custom_fields = base64_encode($newBooking->full_name . "|" . $newBooking->email . "|" . $newBooking->phone);
+            $newBooking->secret_key = "28f03cfe-5a90-455c-af5e-88d821cb0d59";
+            $newBooking->payment = $payment;
+
             return response()->json([
                 'error' => false,
                 'message' => 'Successfully created booking',
-                'booking' => Booking::where('id', $newBooking->id)->with(['bookingTShirts', 'bookingTShirts.tShirt'])->first()
+                'booking' => $newBooking
             ]);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -419,5 +459,19 @@ class BookingController extends Controller
             $bookingReferenceList = date('y') . "" . date('m') . "" . date('d') . "0001";
         }
         return $bookingReferenceList;
+    }
+
+    public function updateBookingStatus($id, $status)
+    {
+        try {
+            $booking = Booking::findOrFail($id);
+            $booking->status = $status;
+            $booking->save();
+
+            $this->sendEmail($booking->id);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+        }
     }
 }

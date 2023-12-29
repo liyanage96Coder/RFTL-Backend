@@ -67,6 +67,10 @@ Route::group(["prefix" => 'booking'], function () {
     Route::post('/update/group/{id}', 'BookingController@updateGroup')->middleware(['tokenVerification']);
 });
 
+Route::group(["prefix" => 'booking-payment'], function () {
+    Route::post('/', 'BookingPaymentController@paymentReceived');
+});
+
 Route::group(["prefix" => 'user'], function () {
     Route::get('/', 'UserController@index')->middleware(['tokenVerification', 'adminVerification']);
     Route::get('/{id}', 'UserController@get')->middleware(['tokenVerification', 'adminVerification']);
