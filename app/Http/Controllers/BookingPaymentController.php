@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Booking;
 use App\BookingPayment;
-use App\Order;
-use App\OrderPayment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
