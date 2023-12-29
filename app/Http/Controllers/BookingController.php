@@ -69,6 +69,26 @@ class BookingController extends Controller
         ]);
     }
 
+    function getBooking($reference): JsonResponse
+    {
+        try {
+            return response()->json([
+                'error' => false,
+                'message' => 'Successfully retrieved booking',
+                'booking' => Booking::where('reference', base64_decode($reference))
+                    ->with(['tShirt', 'bookingTShirts', 'bookingTShirts.tShirt'])
+                    ->first()
+            ]);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+        }
+        return response()->json([
+            'error' => true,
+            'message' => 'An error occurred while getting booking!',
+        ]);
+    }
+
     function getLimited($limit): JsonResponse
     {
         try {

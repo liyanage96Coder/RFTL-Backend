@@ -52,7 +52,7 @@ M6I7xoABOUNYDzullQIDAQAB
             $newBookingPayment->save();
 
             $bookingController = new BookingController();
-            $bookingController->updateBookingStatus($booking->id, $signature_status ? 'Confirmed' : 'Payment Failed');
+            $bookingController->updateBookingStatus($booking->id, $responseVariables[4] === "0" ? 'Confirmed' : 'Payment Failed');
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
