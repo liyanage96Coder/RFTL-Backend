@@ -299,7 +299,7 @@
                     <div class="last-div">LKR {{ $booking->donation }}</div>
                 </div>
             </div>
-            <div class="border-bottom">
+            <div>
                 <div class="d-flex">
                     <div class="qr-text">
                         <strong>
@@ -313,9 +313,13 @@
                         @php
                         $booking_link = 'https://rftl.lk/booking/' . base64_encode($booking->reference);
                         @endphp
-                        <img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->generate($booking_link)) !!} ">
+                        <img
+                            src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->generate($booking_link)) !!} ">
                     </div>
                 </div>
+            </div>
+            <div style="clear: left">
+                <br/>
                 <p>
                     If you have any questions or inquiries, please don’t hesitate to contact us via email
                     (rftl.charityrun@gmail.com) or contact number (+94) 76 232 8714.

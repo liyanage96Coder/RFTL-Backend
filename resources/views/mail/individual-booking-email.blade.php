@@ -316,16 +316,16 @@
                             src="{!!$message->embedData(QrCode::format('png')->generate($booking_link), 'QrCode.png', 'image/png')!!}">
                     </div>
                 </div>
-                <p>
-                    If you have any questions or inquiries, please don’t hesitate to contact us via email
-                    (rftl.charityrun@gmail.com) or contact number (+94) 76 232 8714.
-                </p>
-                <br/>
-                <p>
-                    <strong>Thank you for your contributions</strong><br/>
-                    Rotaract Club Colombo Uptown (RCCU)
-                </p>
             </div>
+            <p>
+                If you have any questions or inquiries, please don’t hesitate to contact us via email
+                (rftl.charityrun@gmail.com) or contact number (+94) 76 232 8714.
+            </p>
+            <br/>
+            <p>
+                <strong>Thank you for your contributions</strong><br/>
+                Rotaract Club Colombo Uptown (RCCU)
+            </p>
         </div>
     </div>
 </div>
