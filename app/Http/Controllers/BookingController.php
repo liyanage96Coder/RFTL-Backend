@@ -245,10 +245,10 @@ class BookingController extends Controller
             // unique_order_id|total_amount
             $plainText = $newBooking->reference . '|' . $newBooking->donation;
             $publicKey = "-----BEGIN PUBLIC KEY-----
-MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDniLV80g3ykBFTO5vrtXJDKAua
-ri5V0RzyXmGV1K50jAajatNYzuiegeSdMVtWXqvkSjWmQJsv+njyMdPBeZBvN627
-NZCIzqESCrtyZkqSf4W7iWKFWbbIY3Gt5NxMHQMce/wZ9HWN1h1xExo2nGZoxrt6
-M6I7xoABOUNYDzullQIDAQAB
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQClRnNNmL9Omdb62JEAJ3X9e34s
+R96tDDKRQyUkciLxuDQOPIs3axSzLF6KNsOSEOZX7jAq6/exwujKxLGnmMyJ3Asd
+rTiRzioFtln5ljzPmMtrXbiD4+aXya0N5BOd3eleiTRYZ1KVubX+kESdk1cTfPTK
+ZvuD9+TwQDpMSJBRZwIDAQAB
 -----END PUBLIC KEY-----";
             //load public key for encrypting
             openssl_public_encrypt($plainText, $encrypt, $publicKey);
@@ -257,7 +257,7 @@ M6I7xoABOUNYDzullQIDAQAB
             $payment = base64_encode($encrypt);
 
             $newBooking->custom_fields = base64_encode($newBooking->reference . "|" . $newBooking->full_name . "|" . $newBooking->email . "|" . $newBooking->phone);
-            $newBooking->secret_key = "28f03cfe-5a90-455c-af5e-88d821cb0d59";
+            $newBooking->secret_key = "f8b7c0b5-ee96-4c28-bd58-c10d93b5acc2";
             $newBooking->payment = $payment;
 
             return response()->json([
@@ -289,10 +289,10 @@ M6I7xoABOUNYDzullQIDAQAB
             // unique_order_id|total_amount
             $plainText = $newBooking->reference . '|' . $newBooking->donation;
             $publicKey = "-----BEGIN PUBLIC KEY-----
-MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDniLV80g3ykBFTO5vrtXJDKAua
-ri5V0RzyXmGV1K50jAajatNYzuiegeSdMVtWXqvkSjWmQJsv+njyMdPBeZBvN627
-NZCIzqESCrtyZkqSf4W7iWKFWbbIY3Gt5NxMHQMce/wZ9HWN1h1xExo2nGZoxrt6
-M6I7xoABOUNYDzullQIDAQAB
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQClRnNNmL9Omdb62JEAJ3X9e34s
+R96tDDKRQyUkciLxuDQOPIs3axSzLF6KNsOSEOZX7jAq6/exwujKxLGnmMyJ3Asd
+rTiRzioFtln5ljzPmMtrXbiD4+aXya0N5BOd3eleiTRYZ1KVubX+kESdk1cTfPTK
+ZvuD9+TwQDpMSJBRZwIDAQAB
 -----END PUBLIC KEY-----";
             //load public key for encrypting
             openssl_public_encrypt($plainText, $encrypt, $publicKey);
@@ -301,7 +301,7 @@ M6I7xoABOUNYDzullQIDAQAB
             $payment = base64_encode($encrypt);
 
             $newBooking->custom_fields = base64_encode($newBooking->full_name . "|" . $newBooking->email . "|" . $newBooking->phone);
-            $newBooking->secret_key = "28f03cfe-5a90-455c-af5e-88d821cb0d59";
+            $newBooking->secret_key = "f8b7c0b5-ee96-4c28-bd58-c10d93b5acc2";
             $newBooking->payment = $payment;
 
             return response()->json([
@@ -488,7 +488,9 @@ M6I7xoABOUNYDzullQIDAQAB
             $booking->status = $status;
             $booking->save();
 
-            $this->sendEmail($booking->id);
+            if ($status === "Confirmed") {
+                $this->sendEmail($booking->id);
+            }
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());

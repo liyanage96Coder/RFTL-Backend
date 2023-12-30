@@ -18,44 +18,46 @@ class BookingPaymentController extends Controller
             $customFields = base64_decode($request->get('custom_fields'));
             //load public key for signature matching
             $publicKey = "-----BEGIN PUBLIC KEY-----
-MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDniLV80g3ykBFTO5vrtXJDKAua
-ri5V0RzyXmGV1K50jAajatNYzuiegeSdMVtWXqvkSjWmQJsv+njyMdPBeZBvN627
-NZCIzqESCrtyZkqSf4W7iWKFWbbIY3Gt5NxMHQMce/wZ9HWN1h1xExo2nGZoxrt6
-M6I7xoABOUNYDzullQIDAQAB
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQClRnNNmL9Omdb62JEAJ3X9e34s
+R96tDDKRQyUkciLxuDQOPIs3axSzLF6KNsOSEOZX7jAq6/exwujKxLGnmMyJ3Asd
+rTiRzioFtln5ljzPmMtrXbiD4+aXya0N5BOd3eleiTRYZ1KVubX+kESdk1cTfPTK
+ZvuD9+TwQDpMSJBRZwIDAQAB
 -----END PUBLIC KEY-----";
             openssl_public_decrypt($signature, $value, $publicKey);
 
-            $signature_status = false;
-
             if ($value == $payment) {
-                $signature_status = true;
+                //get payment response in segments
+                //payment format: order_id|order_refference_number|date_time_transaction|payment_gateway_used|status_code|comment;
+                $responseVariables = explode('|', $payment);
+
+                $newBookingPayment = new BookingPayment();
+                $newBookingPayment->transaction_id = $responseVariables[0];
+                $newBookingPayment->transaction_reference_number = $responseVariables[1];
+                $newBookingPayment->date_time = $responseVariables[2];
+                $newBookingPayment->payment_gateway = $responseVariables[3];
+                $newBookingPayment->status_code = $responseVariables[4];
+                $newBookingPayment->comment = $responseVariables[5];
+
+                $booking = Booking::where('reference', explode('|', $customFields)[0])
+                    ->where('active', 1)
+                    ->first();
+                $newBookingPayment->booking_id = $booking->id;
+                $newBookingPayment->save();
+
+                $bookingController = new BookingController();
+                $bookingController->updateBookingStatus($booking->id, $responseVariables[4] === "0" ? 'Confirmed' : 'Payment Failed');
+
+                if ($responseVariables[4] === "0") {
+                    return redirect('booking/' . base64_encode($booking->reference));
+                } else {
+                    return redirect('payment-failed');
+                }
             }
-
-            //get payment response in segments
-            //payment format: order_id|order_refference_number|date_time_transaction|payment_gateway_used|status_code|comment;
-            $responseVariables = explode('|', $payment);
-
-            $newBookingPayment = new BookingPayment();
-            $newBookingPayment->transaction_id = $responseVariables[0];
-            $newBookingPayment->transaction_reference_number = $responseVariables[1];
-            $newBookingPayment->date_time = $responseVariables[2];
-            $newBookingPayment->payment_gateway = $responseVariables[3];
-            $newBookingPayment->status_code = $responseVariables[4];
-            $newBookingPayment->comment = $responseVariables[5];
-
-            $booking = Booking::where('reference', explode('|', $customFields)[0])
-                ->where('active', 1)
-                ->first();
-            $newBookingPayment->booking_id = $booking->id;
-            $newBookingPayment->save();
-
-            $bookingController = new BookingController();
-            $bookingController->updateBookingStatus($booking->id, $responseVariables[4] === "0" ? 'Confirmed' : 'Payment Failed');
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
         }
 
-        return redirect('booking/' . base64_encode(explode('|', base64_decode($request->get('custom_fields')))[0]));
+        return redirect('payment-failed');
     }
 }
