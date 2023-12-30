@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Booking;
 use App\BookingTShirt;
 use App\TShirt;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -495,5 +496,34 @@ ZvuD9+TwQDpMSJBRZwIDAQAB
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
         }
+    }
+
+    function downloadPDF($reference)
+    {
+        try {
+            $booking = Booking::where('reference', $reference)
+                ->with(['tShirt', 'bookingTShirts', 'bookingTShirts.tShirt'])
+                ->first();
+
+            $data = array('booking' => $booking);
+            if ($booking->is_group) {
+                $booking->member_count = 0;
+                foreach ($booking->bookingTShirts as $bookingTShirt) {
+                    $booking->member_count += $bookingTShirt->quantity;
+                }
+                $pdf = Pdf::loadView('pdf.group-booking-email', $data);
+            } else {
+                $pdf = Pdf::loadView('pdf.individual-booking-email', $data);
+            }
+
+            return $pdf->download('booking.pdf');
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+        }
+        return response()->json([
+            'error' => true,
+            'message' => 'An error occurred while downloading booking!',
+        ]);
     }
 }

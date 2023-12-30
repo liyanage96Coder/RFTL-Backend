@@ -23,7 +23,7 @@
         }
 
         header {
-            padding: 5% 0;
+            padding: 0 0 5% 0;
         }
 
         header > .container {
@@ -98,12 +98,12 @@
             text-decoration: underline;
         }
 
-        .purple-background {
-            background-color: #F8EDFF;
+        .pink-background {
+            background-color: #FFEDF3;
             text-align: center;
         }
 
-        .container > .purple-background {
+        .container > .pink-background {
             padding: 5% 15%;
         }
 
@@ -111,15 +111,8 @@
             padding: 5%;
         }
 
-        .dark-purple-background {
-            background-color: #F4E6FC;
-            padding: 2%;
-            border-radius: 4px;
-            margin-bottom: 24px;
-        }
-
-        .purple-font {
-            color: #A83FE5;
+        .pink-font {
+            color: #E53F71;
         }
 
         .d-flex {
@@ -132,6 +125,7 @@
         }
 
         .d-flex > div {
+            float: left;
             color: #393939;
             font-family: 'Inter', sans-serif;
             font-size: 13px;
@@ -157,7 +151,7 @@
         }
 
         .total-donation > div > div, .total-donation > div > div.last-div {
-            color: #A83FE5;
+            color: #E53F71;
             font-family: 'Inter', sans-serif;
             font-size: 18px;
             font-style: normal;
@@ -179,7 +173,7 @@
 
         @media (min-width: 576px) {
             .container {
-                max-width: 540px;
+                max-width: 95%;
             }
         }
 
@@ -189,7 +183,7 @@
             }
 
             .container {
-                max-width: 720px;
+                max-width: 95%;
                 padding: 0;
             }
         }
@@ -202,7 +196,7 @@
 
         @media (min-width: 1200px) {
             .container {
-                max-width: 75%;
+                max-width: 95%;
             }
         }
 
@@ -231,10 +225,10 @@
 </header>
 <div id="body">
     <div class="container">
-        <div class="purple-background">
+        <div class="pink-background">
             <h1>Your Booking is Confirmed!</h1>
             <p>
-                {{ $booking->full_name }}, thank you for registering for Run For Their Lives 2024 in
+                {{ explode(" ", $booking->full_name)[0] }}, thank you for registering for Run For Their Lives 2024 in
                 aid of the Apeksha Cancer Hospital. Please note that all the proceeds from the event will be donated to
                 the Apeksha Cancer Hospital in Maharagama
             </p>
@@ -250,18 +244,18 @@
                     <div>{{ $booking->created_at->format('F d, Y') }}</div>
                     <div class="last-div booking-id">Booking ID : {{ $booking->reference }}</div>
                 </div>
-                <div>
+                <div style="margin-top: 5%">
                     <h2 class="lineRow-person">Billing Summary</h2>
                 </div>
             </div>
             <div class="border-bottom">
                 <div class="d-flex">
-                    <div>Organization / Company / Group Name :</div>
+                    <div>Full Name :</div>
                     <div class="last-div">{{ $booking->full_name }}</div>
                 </div>
                 <div class="d-flex">
-                    <div>Name of Contact Person :</div>
-                    <div class="last-div">{{ $booking->person_name }}</div>
+                    <div>Date of Birth :</div>
+                    <div class="last-div">{{ $booking->date_of_birth }}</div>
                 </div>
                 <div class="d-flex">
                     <div>Contact Number :</div>
@@ -275,12 +269,12 @@
 
             <div class="border-bottom">
                 <div class="d-flex">
-                    <div>Group Category</div>
+                    <div>T-Shirt Size</div>
                     <div class="last-div" style="font-weight: normal">Payment Method</div>
                 </div>
                 <div class="d-flex">
                     <div style="font-weight: bold; color: #383838">
-                        {{ $booking->group_category }}
+                        {{ $booking->tShirt ? $booking->tShirt->description : "No T-Shirt" }}
                     </div>
                     <div class="last-div" style="font-weight: bold; color: #383838">
                         {{ $booking->payment_type }}
@@ -288,39 +282,14 @@
                 </div>
             </div>
 
-            <div class="dark-purple-background">
-                <p class="purple-font"><strong>T-Shirt Size Details</strong></p>
-            </div>
-
-            <div>
-                @foreach ($booking->bookingTShirts as $bookingTShirt)
-                <div class="border-bottom">
-                    <div class="d-flex">
-                        <div>
-                            {{ $bookingTShirt->t_shirt_id ? $bookingTShirt->tShirt->description. " (".$bookingTShirt->tShirt->size. ")" : "No T-Shirt"
-                            }} :
-                        </div>
-                        <div class="last-div">{{ sprintf("%02d", $bookingTShirt->quantity) }}</div>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-
-            <div class="border-bottom">
-                <div class="d-flex">
-                    <div>Total T-Shirt Quantity :</div>
-                    <div class="last-div">{{ sprintf("%02d", $booking->member_count) }}</div>
-                </div>
-            </div>
-
             <div class="border-bottom">
                 <div class="d-flex">
                     <div>Registration Fee :</div>
-                    <div class="last-div">LKR {{ $booking->member_count * 1600 }}</div>
+                    <div class="last-div">LKR 1600</div>
                 </div>
                 <div class="d-flex">
                     <div>Extra Donation :</div>
-                    <div class="last-div">LKR {{ $booking->donation - ($booking->member_count * 1600) }}</div>
+                    <div class="last-div">LKR {{ $booking->donation - 1600 }}</div>
                 </div>
             </div>
 
@@ -344,8 +313,7 @@
                         @php
                         $booking_link = 'https://rftl.lk/booking/' . base64_encode($booking->reference);
                         @endphp
-                        <img
-                            src="{!!$message->embedData(QrCode::format('png')->generate($booking_link), 'QrCode.png', 'image/png')!!}">
+                        <img src="{!! QrCode::format('png')->generate($booking_link) !!}">
                     </div>
                 </div>
                 <p>

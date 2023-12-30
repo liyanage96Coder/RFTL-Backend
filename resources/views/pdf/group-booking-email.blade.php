@@ -23,7 +23,7 @@
         }
 
         header {
-            padding: 5% 0;
+            padding: 0 0 5% 0;
         }
 
         header > .container {
@@ -132,6 +132,7 @@
         }
 
         .d-flex > div {
+            float: left;
             color: #393939;
             font-family: 'Inter', sans-serif;
             font-size: 13px;
@@ -179,7 +180,7 @@
 
         @media (min-width: 576px) {
             .container {
-                max-width: 540px;
+                max-width: 95%;
             }
         }
 
@@ -189,7 +190,7 @@
             }
 
             .container {
-                max-width: 720px;
+                max-width: 95%;
                 padding: 0;
             }
         }
@@ -202,7 +203,7 @@
 
         @media (min-width: 1200px) {
             .container {
-                max-width: 75%;
+                max-width: 95%;
             }
         }
 
@@ -250,7 +251,7 @@
                     <div>{{ $booking->created_at->format('F d, Y') }}</div>
                     <div class="last-div booking-id">Booking ID : {{ $booking->reference }}</div>
                 </div>
-                <div>
+                <div style="margin-top: 5%">
                     <h2 class="lineRow-person">Billing Summary</h2>
                 </div>
             </div>
@@ -344,8 +345,7 @@
                         @php
                         $booking_link = 'https://rftl.lk/booking/' . base64_encode($booking->reference);
                         @endphp
-                        <img
-                            src="{!!$message->embedData(QrCode::format('png')->generate($booking_link), 'QrCode.png', 'image/png')!!}">
+                        <img src="{!! QrCode::format('png')->generate($booking_link) !!}">
                     </div>
                 </div>
                 <p>

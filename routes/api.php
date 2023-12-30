@@ -55,6 +55,7 @@ Route::group(["prefix" => 'booking'], function () {
     Route::get('/group/', 'BookingController@indexGroup');
     Route::get('/{id}', 'BookingController@get');
     Route::get('/reference/{reference}', 'BookingController@getBooking');
+    Route::get('/download/{reference}', 'BookingController@downloadPDF');
     Route::get('/email/{id}', 'BookingController@sendEmail');
     Route::get('/limit/{limit}', 'BookingController@getLimited');
     Route::get('/group/limit/{limit}', 'BookingController@getGroupLimited');

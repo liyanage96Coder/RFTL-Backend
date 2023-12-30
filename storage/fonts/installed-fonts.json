@@ -1,0 +1,34 @@
+{
+    "montserrat": {
+        "normal": "C:\\Users\\prane\\Documents\\Eccellero\\Eccellero IT (Pvt) Ltd\\Projects\\Yellawt\\RFTL\\rftl-backend\\storage\\fonts\/montserrat_normal_00833106404dc8458cdfb436c759f23d",
+        "100": "C:\\Users\\prane\\Documents\\Eccellero\\Eccellero IT (Pvt) Ltd\\Projects\\Yellawt\\RFTL\\rftl-backend\\storage\\fonts\/montserrat_100_6164641e1084aad4a517246be4e7214d",
+        "200": "C:\\Users\\prane\\Documents\\Eccellero\\Eccellero IT (Pvt) Ltd\\Projects\\Yellawt\\RFTL\\rftl-backend\\storage\\fonts\/montserrat_200_a265b0c8dd3071bb837672a6a3428c47",
+        "300": "C:\\Users\\prane\\Documents\\Eccellero\\Eccellero IT (Pvt) Ltd\\Projects\\Yellawt\\RFTL\\rftl-backend\\storage\\fonts\/montserrat_300_11be3eb1825a588a468235740322e12d",
+        "500": "C:\\Users\\prane\\Documents\\Eccellero\\Eccellero IT (Pvt) Ltd\\Projects\\Yellawt\\RFTL\\rftl-backend\\storage\\fonts\/montserrat_500_1236ec90acb329158f494b3fcb44327e",
+        "600": "C:\\Users\\prane\\Documents\\Eccellero\\Eccellero IT (Pvt) Ltd\\Projects\\Yellawt\\RFTL\\rftl-backend\\storage\\fonts\/montserrat_600_485729d96603ccf9729bf58de2db0851",
+        "bold": "C:\\Users\\prane\\Documents\\Eccellero\\Eccellero IT (Pvt) Ltd\\Projects\\Yellawt\\RFTL\\rftl-backend\\storage\\fonts\/montserrat_bold_5da7810bf4e960efe50d20e94a894069",
+        "800": "C:\\Users\\prane\\Documents\\Eccellero\\Eccellero IT (Pvt) Ltd\\Projects\\Yellawt\\RFTL\\rftl-backend\\storage\\fonts\/montserrat_800_bb4fb217ae8181e31fdcc24e6f32a5f3",
+        "900": "montserrat_900_f1f1d05ddbc7bae79cf2388a44df7c8f"
+    },
+    "inter": {
+        "normal": "C:\\Users\\prane\\Documents\\Eccellero\\Eccellero IT (Pvt) Ltd\\Projects\\Yellawt\\RFTL\\rftl-backend\\storage\\fonts\/inter_normal_3ba32a48b7860dfb008d0b1457da683a",
+        "100": "C:\\Users\\prane\\Documents\\Eccellero\\Eccellero IT (Pvt) Ltd\\Projects\\Yellawt\\RFTL\\rftl-backend\\storage\\fonts\/inter_100_0919dd1e8f1f330c6a8894e030756398",
+        "200": "C:\\Users\\prane\\Documents\\Eccellero\\Eccellero IT (Pvt) Ltd\\Projects\\Yellawt\\RFTL\\rftl-backend\\storage\\fonts\/inter_200_6c4145425c3acc9920c72ae89b2a52c6",
+        "300": "C:\\Users\\prane\\Documents\\Eccellero\\Eccellero IT (Pvt) Ltd\\Projects\\Yellawt\\RFTL\\rftl-backend\\storage\\fonts\/inter_300_ffc5f81dee6c59552a98700cb9ce21c6",
+        "500": "C:\\Users\\prane\\Documents\\Eccellero\\Eccellero IT (Pvt) Ltd\\Projects\\Yellawt\\RFTL\\rftl-backend\\storage\\fonts\/inter_500_5227956572435006df168ae4e07c5148",
+        "600": "C:\\Users\\prane\\Documents\\Eccellero\\Eccellero IT (Pvt) Ltd\\Projects\\Yellawt\\RFTL\\rftl-backend\\storage\\fonts\/inter_600_d0d96b12edf8a78fd85c552d12762fb0",
+        "bold": "C:\\Users\\prane\\Documents\\Eccellero\\Eccellero IT (Pvt) Ltd\\Projects\\Yellawt\\RFTL\\rftl-backend\\storage\\fonts\/inter_bold_868976cd8a549429e4b1d38e6b1b6bed",
+        "800": "C:\\Users\\prane\\Documents\\Eccellero\\Eccellero IT (Pvt) Ltd\\Projects\\Yellawt\\RFTL\\rftl-backend\\storage\\fonts\/inter_800_1909e5290c7f23524b9891a4fa9896a2",
+        "900": "inter_900_c8ebc381046ae1c8d6cd66e9478246ac"
+    },
+    "roboto": {
+        "normal": "C:\\Users\\prane\\Documents\\Eccellero\\Eccellero IT (Pvt) Ltd\\Projects\\Yellawt\\RFTL\\rftl-backend\\storage\\fonts\/roboto_normal_7bc701b343c10631f60048716b96e4f7",
+        "italic": "C:\\Users\\prane\\Documents\\Eccellero\\Eccellero IT (Pvt) Ltd\\Projects\\Yellawt\\RFTL\\rftl-backend\\storage\\fonts\/roboto_italic_e3ef71c7d9eeac822fc7d92d4fc7ff6e",
+        "500_italic": "C:\\Users\\prane\\Documents\\Eccellero\\Eccellero IT (Pvt) Ltd\\Projects\\Yellawt\\RFTL\\rftl-backend\\storage\\fonts\/roboto_500_italic_e69cd621b57d68ed0b47f09bd22a3d7e",
+        "100": "C:\\Users\\prane\\Documents\\Eccellero\\Eccellero IT (Pvt) Ltd\\Projects\\Yellawt\\RFTL\\rftl-backend\\storage\\fonts\/roboto_100_1c4e32da7e6c8539dd3a51af38f413be",
+        "300": "C:\\Users\\prane\\Documents\\Eccellero\\Eccellero IT (Pvt) Ltd\\Projects\\Yellawt\\RFTL\\rftl-backend\\storage\\fonts\/roboto_300_32acfcb296f555e063ebba2be7db9e2f",
+        "500": "C:\\Users\\prane\\Documents\\Eccellero\\Eccellero IT (Pvt) Ltd\\Projects\\Yellawt\\RFTL\\rftl-backend\\storage\\fonts\/roboto_500_5774d6fb05eba3d096525f821dbe4137",
+        "bold": "C:\\Users\\prane\\Documents\\Eccellero\\Eccellero IT (Pvt) Ltd\\Projects\\Yellawt\\RFTL\\rftl-backend\\storage\\fonts\/roboto_bold_8db5cb5d0586c1e891426d13097b1d04",
+        "900": "roboto_900_7bf41cacaff90e7097ddd49fb9296601"
+    }
+}
