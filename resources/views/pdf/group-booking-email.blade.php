@@ -345,7 +345,7 @@
                         @php
                         $booking_link = 'https://rftl.lk/booking/' . base64_encode($booking->reference);
                         @endphp
-                        <img src="{!! QrCode::format('png')->generate($booking_link) !!}">
+                        <img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->generate($booking_link)) !!} ">
                     </div>
                 </div>
                 <p>

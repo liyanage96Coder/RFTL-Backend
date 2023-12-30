@@ -511,9 +511,9 @@ ZvuD9+TwQDpMSJBRZwIDAQAB
                 foreach ($booking->bookingTShirts as $bookingTShirt) {
                     $booking->member_count += $bookingTShirt->quantity;
                 }
-                $pdf = Pdf::loadView('pdf.group-booking-email', $data);
+                $pdf = Pdf::loadView('pdf.group-booking-email', $data, array(), 'UTF-8');
             } else {
-                $pdf = Pdf::loadView('pdf.individual-booking-email', $data);
+                $pdf = Pdf::loadView('pdf.individual-booking-email', $data, array(), 'UTF-8');
             }
 
             return $pdf->download('booking.pdf');
