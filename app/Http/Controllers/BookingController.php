@@ -20,7 +20,11 @@ class BookingController extends Controller
             return response()->json([
                 'error' => false,
                 'message' => 'Successfully retrieved bookings',
-                'bookings' => Booking::where('active', 1)->where('is_group', false)->with(['tShirt'])->get()
+                'bookings' => Booking::where('active', 1)
+                    ->where('is_group', false)
+                    ->where('status', 'Confirmed')
+                    ->with(['tShirt'])
+                    ->get()
             ]);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -38,7 +42,11 @@ class BookingController extends Controller
             return response()->json([
                 'error' => false,
                 'message' => 'Successfully retrieved bookings',
-                'bookings' => Booking::where('active', 1)->where('is_group', true)->with(['bookingTShirts'])->get()
+                'bookings' => Booking::where('active', 1)
+                    ->where('is_group', true)
+                    ->where('status', 'Confirmed')
+                    ->with(['bookingTShirts'])
+                    ->get()
             ]);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -98,6 +106,7 @@ class BookingController extends Controller
                 'message' => 'Successfully retrieved limited bookings',
                 'bookings' => Booking::where('active', 1)
                     ->where('is_group', false)
+                    ->where('status', 'Confirmed')
                     ->with(['tShirt'])
                     ->orderByDesc('id')
                     ->limit($limit)
@@ -121,6 +130,7 @@ class BookingController extends Controller
                 'message' => 'Successfully retrieved limited bookings',
                 'bookings' => Booking::where('active', 1)
                     ->where('is_group', true)
+                    ->where('status', 'Confirmed')
                     ->with(['bookingTShirts'])
                     ->orderByDesc('id')
                     ->limit($limit)
@@ -139,9 +149,20 @@ class BookingController extends Controller
     function getDashboard(): JsonResponse
     {
         try {
-            $bookings = Booking::where('active', 1)->where('is_group', false)->get();
-            $groupBookings = Booking::where('active', 1)->where('is_group', true)->with(['bookingTShirts'])->get();
-            $tShirts = TShirt::where('active', 1)->with(['bookings'])->get();
+            $bookings = Booking::where('active', 1)
+                ->where('is_group', false)
+                ->where('status', 'Confirmed')
+                ->get();
+            $groupBookings = Booking::where('active', 1)
+                ->where('is_group', true)
+                ->where('status', 'Confirmed')
+                ->with(['bookingTShirts'])
+                ->get();
+            $tShirts = TShirt::where('active', 1)
+                ->with(['bookings' => function ($q) {
+                    $q->where('status', 'Confirmed')->where('active', 1);
+                }])
+                ->get();
             $cashDonations = 0.00;
             $onlineDonations = 0.00;
             $individualParticipants = 0;

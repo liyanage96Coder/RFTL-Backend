@@ -32,7 +32,11 @@ class TShirtController extends Controller
     function getAvailable(): JsonResponse
     {
         try {
-            $tShirts = TShirt::where('active', 1)->with(['bookings'])->get();
+            $tShirts = TShirt::where('active', 1)
+                ->with(['bookings' => function ($q) {
+                    $q->where('status', 'Confirmed')->where('active', 1);
+                }])
+                ->get();
             $availableTShirts = array();
             foreach ($tShirts as $tShirt) {
                 $remaining = $tShirt->quantity - count($tShirt->bookings);
