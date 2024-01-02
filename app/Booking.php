@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Booking extends Model
 {
@@ -20,5 +21,10 @@ class Booking extends Model
     public function bookingTShirts(): HasMany
     {
         return $this->hasMany(BookingTShirt::class)->where('active', true);
+    }
+
+    public function payment(): HasOne
+    {
+        return $this->hasOne(BookingPayment::class);
     }
 }

@@ -27,16 +27,16 @@ ZvuD9+TwQDpMSJBRZwIDAQAB
 
             if ($value == $payment) {
                 //get payment response in segments
-                //payment format: order_id|order_refference_number|date_time_transaction|payment_gateway_used|status_code|comment;
+                //order_id|order_refference_number|date_time_transaction|status_code|comment|payment_gateway_used;
                 $responseVariables = explode('|', $payment);
 
                 $newBookingPayment = new BookingPayment();
                 $newBookingPayment->transaction_id = $responseVariables[0];
                 $newBookingPayment->transaction_reference_number = $responseVariables[1];
                 $newBookingPayment->date_time = $responseVariables[2];
-                $newBookingPayment->payment_gateway = $responseVariables[3];
-                $newBookingPayment->status_code = $responseVariables[4];
-                $newBookingPayment->comment = $responseVariables[5];
+                $newBookingPayment->payment_gateway = $responseVariables[5];
+                $newBookingPayment->status_code = $responseVariables[3];
+                $newBookingPayment->comment = $responseVariables[4];
 
                 $booking = Booking::where('reference', explode('|', $customFields)[0])
                     ->where('active', 1)
@@ -45,9 +45,9 @@ ZvuD9+TwQDpMSJBRZwIDAQAB
                 $newBookingPayment->save();
 
                 $bookingController = new BookingController();
-                $bookingController->updateBookingStatus($booking->id, $responseVariables[4] === "0" ? 'Confirmed' : 'Payment Failed');
+                $bookingController->updateBookingStatus($booking->id, $newBookingPayment->status_code === "0" ? 'Confirmed' : 'Payment Failed');
 
-                if ($responseVariables[4] === "0") {
+                if ($newBookingPayment->status_code === "0") {
                     return redirect('booking/' . base64_encode($booking->reference));
                 } else {
                     return redirect('payment-failed');

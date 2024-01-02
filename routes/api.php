@@ -53,6 +53,8 @@ Route::group(["prefix" => 't-shirt'], function () {
 Route::group(["prefix" => 'booking'], function () {
     Route::get('/', 'BookingController@index');
     Route::get('/group/', 'BookingController@indexGroup');
+    Route::get('/pending/', 'BookingController@indexPending');
+    Route::get('/group/pending/', 'BookingController@indexPendingGroup');
     Route::get('/{id}', 'BookingController@get');
     Route::get('/reference/{reference}', 'BookingController@getBooking');
     Route::get('/download/{reference}', 'BookingController@downloadPDF');

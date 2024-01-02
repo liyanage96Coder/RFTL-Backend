@@ -58,6 +58,50 @@ class BookingController extends Controller
         ]);
     }
 
+    function indexPending(): JsonResponse
+    {
+        try {
+            return response()->json([
+                'error' => false,
+                'message' => 'Successfully retrieved bookings',
+                'bookings' => Booking::where('active', 1)
+                    ->where('is_group', false)
+                    ->where('status', '!=', 'Confirmed')
+                    ->with(['tShirt'])
+                    ->get()
+            ]);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+        }
+        return response()->json([
+            'error' => true,
+            'message' => 'An error occurred while getting bookings!',
+        ]);
+    }
+
+    function indexPendingGroup(): JsonResponse
+    {
+        try {
+            return response()->json([
+                'error' => false,
+                'message' => 'Successfully retrieved bookings',
+                'bookings' => Booking::where('active', 1)
+                    ->where('is_group', true)
+                    ->where('status', '!=', 'Confirmed')
+                    ->with(['bookingTShirts'])
+                    ->get()
+            ]);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+        }
+        return response()->json([
+            'error' => true,
+            'message' => 'An error occurred while getting bookings!',
+        ]);
+    }
+
     function get($id): JsonResponse
     {
         try {
@@ -65,7 +109,7 @@ class BookingController extends Controller
                 'error' => false,
                 'message' => 'Successfully retrieved booking',
                 'booking' => Booking::where('id', $id)
-                    ->with(['tShirt', 'bookingTShirts', 'bookingTShirts.tShirt'])
+                    ->with(['tShirt', 'bookingTShirts', 'bookingTShirts.tShirt', 'payment'])
                     ->first()
             ]);
         } catch (\Exception $e) {
