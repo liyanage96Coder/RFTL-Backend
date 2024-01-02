@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Booking;
 use App\BookingTShirt;
 use App\TShirt;
+use App\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -14,17 +15,35 @@ use Illuminate\Support\Facades\Mail;
 
 class BookingController extends Controller
 {
-    function index(): JsonResponse
+    function index(Request $request): JsonResponse
     {
         try {
+            $user = null;
+            $bookings = Booking::where('active', 1)
+                ->where('is_group', false)
+                ->where('status', 'Confirmed')
+                ->with(['tShirt'])
+                ->get();
+            if ($request->header('Authorization') && $request->header('Authorization') !== 'null') {
+                $user = User::where('token', $request->header('Authorization'))->with(['role'])->first();
+                if (!$user) {
+                    return response()->json([
+                        'error' => true,
+                        'message' => 'Not Authorized!',
+                    ]);
+                } elseif ($user->role->name !== "ADMIN") {
+                    $bookings = Booking::where('active', 1)
+                        ->where('is_group', false)
+                        ->where('status', 'Confirmed')
+                        ->where('user_id', $user->id)
+                        ->with(['tShirt'])
+                        ->get();
+                }
+            }
             return response()->json([
                 'error' => false,
                 'message' => 'Successfully retrieved bookings',
-                'bookings' => Booking::where('active', 1)
-                    ->where('is_group', false)
-                    ->where('status', 'Confirmed')
-                    ->with(['tShirt'])
-                    ->get()
+                'bookings' => $bookings
             ]);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -36,17 +55,35 @@ class BookingController extends Controller
         ]);
     }
 
-    function indexGroup(): JsonResponse
+    function indexGroup(Request $request): JsonResponse
     {
         try {
+            $user = null;
+            $bookings = Booking::where('active', 1)
+                ->where('is_group', true)
+                ->where('status', 'Confirmed')
+                ->with(['bookingTShirts'])
+                ->get();
+            if ($request->header('Authorization') && $request->header('Authorization') !== 'null') {
+                $user = User::where('token', $request->header('Authorization'))->with(['role'])->first();
+                if (!$user) {
+                    return response()->json([
+                        'error' => true,
+                        'message' => 'Not Authorized!',
+                    ]);
+                } elseif ($user->role->name !== "ADMIN") {
+                    $bookings = Booking::where('active', 1)
+                        ->where('is_group', true)
+                        ->where('status', 'Confirmed')
+                        ->where('user_id', $user->id)
+                        ->with(['bookingTShirts'])
+                        ->get();
+                }
+            }
             return response()->json([
                 'error' => false,
                 'message' => 'Successfully retrieved bookings',
-                'bookings' => Booking::where('active', 1)
-                    ->where('is_group', true)
-                    ->where('status', 'Confirmed')
-                    ->with(['bookingTShirts'])
-                    ->get()
+                'bookings' => $bookings
             ]);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -58,17 +95,35 @@ class BookingController extends Controller
         ]);
     }
 
-    function indexPending(): JsonResponse
+    function indexPending(Request $request): JsonResponse
     {
         try {
+            $user = null;
+            $bookings = Booking::where('active', 1)
+                ->where('is_group', false)
+                ->where('status', '!=', 'Confirmed')
+                ->with(['tShirt'])
+                ->get();
+            if ($request->header('Authorization') && $request->header('Authorization') !== 'null') {
+                $user = User::where('token', $request->header('Authorization'))->with(['role'])->first();
+                if (!$user) {
+                    return response()->json([
+                        'error' => true,
+                        'message' => 'Not Authorized!',
+                    ]);
+                } elseif ($user->role->name !== "ADMIN") {
+                    $bookings = Booking::where('active', 1)
+                        ->where('is_group', false)
+                        ->where('status', '!=', 'Confirmed')
+                        ->where('user_id', $user->id)
+                        ->with(['tShirt'])
+                        ->get();
+                }
+            }
             return response()->json([
                 'error' => false,
                 'message' => 'Successfully retrieved bookings',
-                'bookings' => Booking::where('active', 1)
-                    ->where('is_group', false)
-                    ->where('status', '!=', 'Confirmed')
-                    ->with(['tShirt'])
-                    ->get()
+                'bookings' => $bookings
             ]);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -80,17 +135,35 @@ class BookingController extends Controller
         ]);
     }
 
-    function indexPendingGroup(): JsonResponse
+    function indexPendingGroup(Request $request): JsonResponse
     {
         try {
+            $user = null;
+            $bookings = Booking::where('active', 1)
+                ->where('is_group', true)
+                ->where('status', '!=', 'Confirmed')
+                ->with(['bookingTShirts'])
+                ->get();
+            if ($request->header('Authorization') && $request->header('Authorization') !== 'null') {
+                $user = User::where('token', $request->header('Authorization'))->with(['role'])->first();
+                if (!$user) {
+                    return response()->json([
+                        'error' => true,
+                        'message' => 'Not Authorized!',
+                    ]);
+                } elseif ($user->role->name !== "ADMIN") {
+                    $bookings = Booking::where('active', 1)
+                        ->where('is_group', true)
+                        ->where('status', '!=', 'Confirmed')
+                        ->where('user_id', $user->id)
+                        ->with(['bookingTShirts'])
+                        ->get();
+                }
+            }
             return response()->json([
                 'error' => false,
                 'message' => 'Successfully retrieved bookings',
-                'bookings' => Booking::where('active', 1)
-                    ->where('is_group', true)
-                    ->where('status', '!=', 'Confirmed')
-                    ->with(['bookingTShirts'])
-                    ->get()
+                'bookings' => $bookings
             ]);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -388,10 +461,21 @@ ZvuD9+TwQDpMSJBRZwIDAQAB
     function adminCreate(Request $request): JsonResponse
     {
         try {
+            $user = null;
+            if ($request->header('Authorization') && $request->header('Authorization') !== 'null') {
+                $user = User::where('token', $request->header('Authorization'))->first();
+                if (!$user) {
+                    return response()->json([
+                        'error' => true,
+                        'message' => 'Not Authorized!',
+                    ]);
+                }
+            }
             $newBooking = new Booking();
             $newBooking->reference = $this->bookingReferenceGenerate();
             $newBooking->status = "Confirmed";
             $newBooking->payment_type = "Cash";
+            $newBooking->user_id = $user->id;
             $this->getData($request, $newBooking);
 
             return response()->json([
@@ -412,10 +496,21 @@ ZvuD9+TwQDpMSJBRZwIDAQAB
     function adminGroupCreate(Request $request): JsonResponse
     {
         try {
+            $user = null;
+            if ($request->header('Authorization') && $request->header('Authorization') !== 'null') {
+                $user = User::where('token', $request->header('Authorization'))->first();
+                if (!$user) {
+                    return response()->json([
+                        'error' => true,
+                        'message' => 'Not Authorized!',
+                    ]);
+                }
+            }
             $newBooking = new Booking();
             $newBooking->reference = $this->bookingReferenceGenerate();
             $newBooking->status = "Confirmed";
             $newBooking->payment_type = "Cash";
+            $newBooking->user_id = $user->id;
             $this->getGroupData($request, $newBooking);
 
             return response()->json([
