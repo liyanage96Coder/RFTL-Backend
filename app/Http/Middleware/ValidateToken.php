@@ -16,8 +16,14 @@ class ValidateToken
      */
     public function handle($request, Closure $next)
     {
+        $token = null;
         if ($request->header('Authorization') && $request->header('Authorization') !== 'null') {
-            $user = User::where('token', $request->header('Authorization'))->first();
+            $token = $request->header('Authorization');
+        } elseif ($request->header('Token') && $request->header('Token') !== 'null') {
+            $token = $request->header('Token');
+        }
+        if ($token) {
+            $user = User::where('token', $token)->first();
             if ($user) {
                 return $next($request);
             }

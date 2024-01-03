@@ -24,8 +24,14 @@ class BookingController extends Controller
                 ->where('status', 'Confirmed')
                 ->with(['tShirt'])
                 ->get();
+            $token = null;
             if ($request->header('Authorization') && $request->header('Authorization') !== 'null') {
-                $user = User::where('token', $request->header('Authorization'))->with(['role'])->first();
+                $token = $request->header('Authorization');
+            } elseif ($request->header('Token') && $request->header('Token') !== 'null') {
+                $token = $request->header('Token');
+            }
+            if ($token) {
+                $user = User::where('token', $token)->first();
                 if (!$user) {
                     return response()->json([
                         'error' => true,
@@ -64,8 +70,14 @@ class BookingController extends Controller
                 ->where('status', 'Confirmed')
                 ->with(['bookingTShirts'])
                 ->get();
+            $token = null;
             if ($request->header('Authorization') && $request->header('Authorization') !== 'null') {
-                $user = User::where('token', $request->header('Authorization'))->with(['role'])->first();
+                $token = $request->header('Authorization');
+            } elseif ($request->header('Token') && $request->header('Token') !== 'null') {
+                $token = $request->header('Token');
+            }
+            if ($token) {
+                $user = User::where('token', $token)->first();
                 if (!$user) {
                     return response()->json([
                         'error' => true,
@@ -104,8 +116,14 @@ class BookingController extends Controller
                 ->where('status', '!=', 'Confirmed')
                 ->with(['tShirt'])
                 ->get();
+            $token = null;
             if ($request->header('Authorization') && $request->header('Authorization') !== 'null') {
-                $user = User::where('token', $request->header('Authorization'))->with(['role'])->first();
+                $token = $request->header('Authorization');
+            } elseif ($request->header('Token') && $request->header('Token') !== 'null') {
+                $token = $request->header('Token');
+            }
+            if ($token) {
+                $user = User::where('token', $token)->first();
                 if (!$user) {
                     return response()->json([
                         'error' => true,
@@ -144,8 +162,14 @@ class BookingController extends Controller
                 ->where('status', '!=', 'Confirmed')
                 ->with(['bookingTShirts'])
                 ->get();
+            $token = null;
             if ($request->header('Authorization') && $request->header('Authorization') !== 'null') {
-                $user = User::where('token', $request->header('Authorization'))->with(['role'])->first();
+                $token = $request->header('Authorization');
+            } elseif ($request->header('Token') && $request->header('Token') !== 'null') {
+                $token = $request->header('Token');
+            }
+            if ($token) {
+                $user = User::where('token', $token)->first();
                 if (!$user) {
                     return response()->json([
                         'error' => true,
@@ -462,14 +486,14 @@ ZvuD9+TwQDpMSJBRZwIDAQAB
     {
         try {
             $user = null;
+            $token = null;
             if ($request->header('Authorization') && $request->header('Authorization') !== 'null') {
-                $user = User::where('token', $request->header('Authorization'))->first();
-                if (!$user) {
-                    return response()->json([
-                        'error' => true,
-                        'message' => 'Not Authorized!',
-                    ]);
-                }
+                $token = $request->header('Authorization');
+            } elseif ($request->header('Token') && $request->header('Token') !== 'null') {
+                $token = $request->header('Token');
+            }
+            if ($token) {
+                $user = User::where('token', $token)->first();
             }
             $newBooking = new Booking();
             $newBooking->reference = $this->bookingReferenceGenerate();
@@ -497,14 +521,14 @@ ZvuD9+TwQDpMSJBRZwIDAQAB
     {
         try {
             $user = null;
+            $token = null;
             if ($request->header('Authorization') && $request->header('Authorization') !== 'null') {
-                $user = User::where('token', $request->header('Authorization'))->first();
-                if (!$user) {
-                    return response()->json([
-                        'error' => true,
-                        'message' => 'Not Authorized!',
-                    ]);
-                }
+                $token = $request->header('Authorization');
+            } elseif ($request->header('Token') && $request->header('Token') !== 'null') {
+                $token = $request->header('Token');
+            }
+            if ($token) {
+                $user = User::where('token', $token)->first();
             }
             $newBooking = new Booking();
             $newBooking->reference = $this->bookingReferenceGenerate();

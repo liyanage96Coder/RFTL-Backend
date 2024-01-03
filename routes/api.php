@@ -25,9 +25,9 @@ Route::group(["prefix" => 'partner'], function () {
     Route::get('/', 'PartnerController@index');
     Route::get('/{id}', 'PartnerController@get');
     Route::get('/limit/{limit}', 'PartnerController@getLimited');
-    Route::post('/', 'PartnerController@create');
-    Route::delete('/{id}', 'PartnerController@delete');
-    Route::post('/update/{id}', 'PartnerController@update');
+    Route::post('/', 'PartnerController@create')->middleware(['tokenVerification', 'adminVerification']);
+    Route::delete('/{id}', 'PartnerController@delete')->middleware(['tokenVerification', 'adminVerification']);
+    Route::post('/update/{id}', 'PartnerController@update')->middleware(['tokenVerification', 'adminVerification']);
 });
 
 Route::group(["prefix" => 'gallery'], function () {
@@ -35,9 +35,9 @@ Route::group(["prefix" => 'gallery'], function () {
     Route::get('/tags/', 'GalleryController@getOnTags');
     Route::get('/{id}', 'GalleryController@get');
     Route::get('/limit/{limit}', 'GalleryController@getLimited');
-    Route::post('/', 'GalleryController@create');
-    Route::delete('/{id}', 'GalleryController@delete');
-    Route::post('/update/{id}', 'GalleryController@update');
+    Route::post('/', 'GalleryController@create')->middleware(['tokenVerification', 'adminVerification']);
+    Route::delete('/{id}', 'GalleryController@delete')->middleware(['tokenVerification', 'adminVerification']);
+    Route::post('/update/{id}', 'GalleryController@update')->middleware(['tokenVerification', 'adminVerification']);
 });
 
 Route::group(["prefix" => 't-shirt'], function () {
@@ -45,30 +45,30 @@ Route::group(["prefix" => 't-shirt'], function () {
     Route::get('/available/', 'TShirtController@getAvailable');
     Route::get('/{id}', 'TShirtController@get');
     Route::get('/limit/{limit}', 'TShirtController@getLimited');
-    Route::post('/', 'TShirtController@create');
-    Route::delete('/{id}', 'TShirtController@delete');
-    Route::post('/update/{id}', 'TShirtController@update');
+    Route::post('/', 'TShirtController@create')->middleware(['tokenVerification', 'adminVerification']);
+    Route::delete('/{id}', 'TShirtController@delete')->middleware(['tokenVerification', 'adminVerification']);
+    Route::post('/update/{id}', 'TShirtController@update')->middleware(['tokenVerification', 'adminVerification']);
 });
 
 Route::group(["prefix" => 'booking'], function () {
-    Route::get('/', 'BookingController@index');
-    Route::get('/group/', 'BookingController@indexGroup');
-    Route::get('/pending/', 'BookingController@indexPending');
-    Route::get('/group/pending/', 'BookingController@indexPendingGroup');
-    Route::get('/{id}', 'BookingController@get');
+    Route::get('/', 'BookingController@index')->middleware(['tokenVerification']);
+    Route::get('/group/', 'BookingController@indexGroup')->middleware(['tokenVerification']);
+    Route::get('/pending/', 'BookingController@indexPending')->middleware(['tokenVerification']);
+    Route::get('/group/pending/', 'BookingController@indexPendingGroup')->middleware(['tokenVerification']);
+    Route::get('/{id}', 'BookingController@get')->middleware(['tokenVerification', 'adminVerification']);
     Route::get('/reference/{reference}', 'BookingController@getBooking');
     Route::get('/download/{reference}', 'BookingController@downloadPDF');
-    Route::get('/email/{id}', 'BookingController@sendEmail');
-    Route::get('/limit/{limit}', 'BookingController@getLimited');
-    Route::get('/group/limit/{limit}', 'BookingController@getGroupLimited');
-    Route::get('/admin/dashboard/', 'BookingController@getDashboard');
+    Route::get('/email/{id}', 'BookingController@sendEmail')->middleware(['tokenVerification', 'adminVerification']);
+    Route::get('/limit/{limit}', 'BookingController@getLimited')->middleware(['tokenVerification', 'adminVerification']);
+    Route::get('/group/limit/{limit}', 'BookingController@getGroupLimited')->middleware(['tokenVerification', 'adminVerification']);
+    Route::get('/admin/dashboard/', 'BookingController@getDashboard')->middleware(['tokenVerification', 'adminVerification']);
     Route::post('/', 'BookingController@create');
     Route::post('/group/', 'BookingController@createGroup');
-    Route::post('/admin/', 'BookingController@adminCreate');
-    Route::post('/admin/group', 'BookingController@adminGroupCreate');
-    Route::delete('/{id}', 'BookingController@delete');
-    Route::post('/update/{id}', 'BookingController@update');
-    Route::post('/update/group/{id}', 'BookingController@updateGroup');
+    Route::post('/admin/', 'BookingController@adminCreate')->middleware(['tokenVerification']);
+    Route::post('/admin/group', 'BookingController@adminGroupCreate')->middleware(['tokenVerification']);
+    Route::delete('/{id}', 'BookingController@delete')->middleware(['tokenVerification', 'adminVerification']);
+    Route::post('/update/{id}', 'BookingController@update')->middleware(['tokenVerification', 'adminVerification']);
+    Route::post('/update/group/{id}', 'BookingController@updateGroup')->middleware(['tokenVerification', 'adminVerification']);
 });
 
 Route::group(["prefix" => 'booking-payment'], function () {
@@ -76,22 +76,22 @@ Route::group(["prefix" => 'booking-payment'], function () {
 });
 
 Route::group(["prefix" => 'user'], function () {
-    Route::get('/', 'UserController@index');
-    Route::get('/{id}', 'UserController@get');
-    Route::post('/', 'UserController@create');
-    Route::delete('/{id}', 'UserController@delete');
-    Route::post('/update/{id}', 'UserController@update');
+    Route::get('/', 'UserController@index')->middleware(['tokenVerification', 'adminVerification']);
+    Route::get('/{id}', 'UserController@get')->middleware(['tokenVerification', 'adminVerification']);
+    Route::post('/', 'UserController@create')->middleware(['tokenVerification', 'adminVerification']);
+    Route::delete('/{id}', 'UserController@delete')->middleware(['tokenVerification', 'adminVerification']);
+    Route::post('/update/{id}', 'UserController@update')->middleware(['tokenVerification', 'adminVerification']);
 });
 
 Route::group(["prefix" => 'role'], function () {
-    Route::get('/', 'RoleController@index');
+    Route::get('/', 'RoleController@index')->middleware(['tokenVerification', 'adminVerification']);
 });
 
 Route::group(["prefix" => 'contact-us'], function () {
-    Route::get('/', 'ContactUsController@index');
-    Route::get('/{id}', 'ContactUsController@get');
-    Route::get('/limit/{limit}', 'ContactUsController@getLimited');
+    Route::get('/', 'ContactUsController@index')->middleware(['tokenVerification', 'adminVerification']);
+    Route::get('/{id}', 'ContactUsController@get')->middleware(['tokenVerification', 'adminVerification']);
+    Route::get('/limit/{limit}', 'ContactUsController@getLimited')->middleware(['tokenVerification', 'adminVerification']);
     Route::post('/', 'ContactUsController@create');
-    Route::delete('/{id}', 'ContactUsController@delete');
-    Route::post('/update/{id}', 'ContactUsController@update');
+    Route::delete('/{id}', 'ContactUsController@delete')->middleware(['tokenVerification', 'adminVerification']);
+    Route::post('/update/{id}', 'ContactUsController@update')->middleware(['tokenVerification', 'adminVerification']);
 });
