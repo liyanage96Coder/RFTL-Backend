@@ -19,11 +19,7 @@ class BookingController extends Controller
     {
         try {
             $user = null;
-            $bookings = Booking::where('active', 1)
-                ->where('is_group', false)
-                ->where('status', 'Confirmed')
-                ->with(['tShirt'])
-                ->get();
+            $bookings = array();
             $token = null;
             if ($request->header('Authorization') && $request->header('Authorization') !== 'null') {
                 $token = $request->header('Authorization');
@@ -32,12 +28,13 @@ class BookingController extends Controller
             }
             if ($token) {
                 $user = User::where('token', $token)->first();
-                if (!$user) {
-                    return response()->json([
-                        'error' => true,
-                        'message' => 'Not Authorized!',
-                    ]);
-                } elseif ($user->role->name !== "ADMIN") {
+                if ($user->role->name === "ADMIN") {
+                    $bookings = Booking::where('active', 1)
+                        ->where('is_group', false)
+                        ->where('status', 'Confirmed')
+                        ->with(['tShirt'])
+                        ->get();
+                } else {
                     $bookings = Booking::where('active', 1)
                         ->where('is_group', false)
                         ->where('status', 'Confirmed')
@@ -65,11 +62,7 @@ class BookingController extends Controller
     {
         try {
             $user = null;
-            $bookings = Booking::where('active', 1)
-                ->where('is_group', true)
-                ->where('status', 'Confirmed')
-                ->with(['bookingTShirts'])
-                ->get();
+            $bookings = array();
             $token = null;
             if ($request->header('Authorization') && $request->header('Authorization') !== 'null') {
                 $token = $request->header('Authorization');
@@ -78,12 +71,13 @@ class BookingController extends Controller
             }
             if ($token) {
                 $user = User::where('token', $token)->first();
-                if (!$user) {
-                    return response()->json([
-                        'error' => true,
-                        'message' => 'Not Authorized!',
-                    ]);
-                } elseif ($user->role->name !== "ADMIN") {
+                if ($user->role->name === "ADMIN") {
+                    $bookings = Booking::where('active', 1)
+                        ->where('is_group', true)
+                        ->where('status', 'Confirmed')
+                        ->with(['bookingTShirts'])
+                        ->get();
+                } else {
                     $bookings = Booking::where('active', 1)
                         ->where('is_group', true)
                         ->where('status', 'Confirmed')
@@ -111,11 +105,7 @@ class BookingController extends Controller
     {
         try {
             $user = null;
-            $bookings = Booking::where('active', 1)
-                ->where('is_group', false)
-                ->where('status', '!=', 'Confirmed')
-                ->with(['tShirt'])
-                ->get();
+            $bookings = array();
             $token = null;
             if ($request->header('Authorization') && $request->header('Authorization') !== 'null') {
                 $token = $request->header('Authorization');
@@ -124,12 +114,13 @@ class BookingController extends Controller
             }
             if ($token) {
                 $user = User::where('token', $token)->first();
-                if (!$user) {
-                    return response()->json([
-                        'error' => true,
-                        'message' => 'Not Authorized!',
-                    ]);
-                } elseif ($user->role->name !== "ADMIN") {
+                if ($user->role->name === "ADMIN") {
+                    $bookings = Booking::where('active', 1)
+                        ->where('is_group', false)
+                        ->where('status', '!=', 'Confirmed')
+                        ->with(['tShirt'])
+                        ->get();
+                } else {
                     $bookings = Booking::where('active', 1)
                         ->where('is_group', false)
                         ->where('status', '!=', 'Confirmed')
@@ -157,11 +148,7 @@ class BookingController extends Controller
     {
         try {
             $user = null;
-            $bookings = Booking::where('active', 1)
-                ->where('is_group', true)
-                ->where('status', '!=', 'Confirmed')
-                ->with(['bookingTShirts'])
-                ->get();
+            $bookings = array();
             $token = null;
             if ($request->header('Authorization') && $request->header('Authorization') !== 'null') {
                 $token = $request->header('Authorization');
@@ -170,12 +157,13 @@ class BookingController extends Controller
             }
             if ($token) {
                 $user = User::where('token', $token)->first();
-                if (!$user) {
-                    return response()->json([
-                        'error' => true,
-                        'message' => 'Not Authorized!',
-                    ]);
-                } elseif ($user->role->name !== "ADMIN") {
+                if ($user->role->name === "ADMIN") {
+                    $bookings = Booking::where('active', 1)
+                        ->where('is_group', true)
+                        ->where('status', '!=', 'Confirmed')
+                        ->with(['bookingTShirts'])
+                        ->get();
+                } else {
                     $bookings = Booking::where('active', 1)
                         ->where('is_group', true)
                         ->where('status', '!=', 'Confirmed')
