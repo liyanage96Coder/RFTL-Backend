@@ -451,7 +451,7 @@ ZvuD9+TwQDpMSJBRZwIDAQAB
             //encode for data passing
             $payment = base64_encode($encrypt);
 
-            $newBooking->custom_fields = base64_encode($newBooking->full_name . "|" . $newBooking->email . "|" . $newBooking->phone);
+            $newBooking->custom_fields = base64_encode($newBooking->reference . "|" . $newBooking->full_name . "|" . $newBooking->email . "|" . $newBooking->phone);
             $newBooking->secret_key = "f8b7c0b5-ee96-4c28-bd58-c10d93b5acc2";
             $newBooking->payment = $payment;
 
