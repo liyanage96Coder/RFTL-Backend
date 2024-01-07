@@ -58,7 +58,7 @@ Route::group(["prefix" => 'booking'], function () {
     Route::get('/{id}', 'BookingController@get')->middleware(['tokenVerification', 'adminVerification']);
     Route::get('/reference/{reference}', 'BookingController@getBooking');
     Route::get('/download/{reference}', 'BookingController@downloadPDF');
-    Route::get('/email/{id}', 'BookingController@sendEmail')->middleware(['tokenVerification', 'adminVerification']);
+    Route::get('/email/{id}', 'BookingController@sendEmail')->middleware(['tokenVerification']);
     Route::get('/limit/{limit}', 'BookingController@getLimited')->middleware(['tokenVerification', 'adminVerification']);
     Route::get('/group/limit/{limit}', 'BookingController@getGroupLimited')->middleware(['tokenVerification', 'adminVerification']);
     Route::get('/admin/dashboard/', 'BookingController@getDashboard')->middleware(['tokenVerification', 'adminVerification']);
