@@ -47,7 +47,9 @@ class LoginController extends Controller
 
         if (Auth::attempt(['email' => $request->get('email'), 'password' => $request->get('password'), 'active' => 1])) {
             $user = $this->guard()->user()->load(['role']);
-            $user->generateToken();
+            if (!$request->get('website')) {
+                $user->generateToken();
+            }
 
             return response()->json([
                 'user' => $user->toArray(),

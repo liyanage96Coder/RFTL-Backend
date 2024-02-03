@@ -56,6 +56,7 @@ Route::group(["prefix" => 'booking'], function () {
     Route::get('/pending/', 'BookingController@indexPending')->middleware(['tokenVerification']);
     Route::get('/group/pending/', 'BookingController@indexPendingGroup')->middleware(['tokenVerification']);
     Route::get('/{id}', 'BookingController@get')->middleware(['tokenVerification', 'adminVerification']);
+    Route::get('/user/{userId}', 'BookingController@user')->middleware(['tokenVerification', 'adminVerification']);
     Route::get('/reference/{reference}', 'BookingController@getBooking');
     Route::get('/download/{reference}', 'BookingController@downloadPDF');
     Route::get('/email/{id}', 'BookingController@sendEmail')->middleware(['tokenVerification']);
@@ -69,6 +70,7 @@ Route::group(["prefix" => 'booking'], function () {
     Route::delete('/{id}', 'BookingController@delete')->middleware(['tokenVerification', 'adminVerification']);
     Route::post('/update/{id}', 'BookingController@update')->middleware(['tokenVerification', 'adminVerification']);
     Route::post('/update/group/{id}', 'BookingController@updateGroup')->middleware(['tokenVerification', 'adminVerification']);
+    Route::post('/checkin/{id}', 'BookingController@checkin')->middleware(['tokenVerification']);
 });
 
 Route::group(["prefix" => 'booking-payment'], function () {

@@ -32,14 +32,14 @@ class BookingController extends Controller
                     $bookings = Booking::where('active', 1)
                         ->where('is_group', false)
                         ->where('status', 'Confirmed')
-                        ->with(['tShirt'])
+                        ->with(['tShirt', 'user', 'payment'])
                         ->get();
                 } else {
                     $bookings = Booking::where('active', 1)
                         ->where('is_group', false)
                         ->where('status', 'Confirmed')
                         ->where('user_id', $user->id)
-                        ->with(['tShirt'])
+                        ->with(['tShirt', 'user', 'payment'])
                         ->get();
                 }
             }
@@ -75,14 +75,14 @@ class BookingController extends Controller
                     $bookings = Booking::where('active', 1)
                         ->where('is_group', true)
                         ->where('status', 'Confirmed')
-                        ->with(['bookingTShirts'])
+                        ->with(['bookingTShirts', 'bookingTShirts.tShirt', 'user', 'payment'])
                         ->get();
                 } else {
                     $bookings = Booking::where('active', 1)
                         ->where('is_group', true)
                         ->where('status', 'Confirmed')
                         ->where('user_id', $user->id)
-                        ->with(['bookingTShirts'])
+                        ->with(['bookingTShirts', 'bookingTShirts.tShirt', 'user', 'payment'])
                         ->get();
                 }
             }
@@ -118,14 +118,14 @@ class BookingController extends Controller
                     $bookings = Booking::where('active', 1)
                         ->where('is_group', false)
                         ->where('status', '!=', 'Confirmed')
-                        ->with(['tShirt'])
+                        ->with(['tShirt', 'user', 'payment'])
                         ->get();
                 } else {
                     $bookings = Booking::where('active', 1)
                         ->where('is_group', false)
                         ->where('status', '!=', 'Confirmed')
                         ->where('user_id', $user->id)
-                        ->with(['tShirt'])
+                        ->with(['tShirt', 'user', 'payment'])
                         ->get();
                 }
             }
@@ -161,14 +161,14 @@ class BookingController extends Controller
                     $bookings = Booking::where('active', 1)
                         ->where('is_group', true)
                         ->where('status', '!=', 'Confirmed')
-                        ->with(['bookingTShirts'])
+                        ->with(['bookingTShirts', 'bookingTShirts.tShirt', 'user', 'payment'])
                         ->get();
                 } else {
                     $bookings = Booking::where('active', 1)
                         ->where('is_group', true)
                         ->where('status', '!=', 'Confirmed')
                         ->where('user_id', $user->id)
-                        ->with(['bookingTShirts'])
+                        ->with(['bookingTShirts', 'bookingTShirts.tShirt', 'user', 'payment'])
                         ->get();
                 }
             }
@@ -184,6 +184,28 @@ class BookingController extends Controller
         return response()->json([
             'error' => true,
             'message' => 'An error occurred while getting bookings!',
+        ]);
+    }
+
+    function user($userId): JsonResponse
+    {
+        try {
+            return response()->json([
+                'error' => false,
+                'message' => 'Successfully retrieved user bookings',
+                'bookings' => $bookings = Booking::where('active', 1)
+                    ->where('status', 'Confirmed')
+                    ->where('user_id', $userId)
+                    ->with(['tShirt', 'user', 'payment', 'bookingTShirts', 'bookingTShirts.tShirt'])
+                    ->get()
+            ]);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+        }
+        return response()->json([
+            'error' => true,
+            'message' => 'An error occurred while getting user bookings!',
         ]);
     }
 
@@ -296,11 +318,26 @@ class BookingController extends Controller
             $onlineDonations = 0.00;
             $individualParticipants = 0;
             $groupParticipants = 0;
+            $userLeaderboard = array();
 
             foreach ($bookings as $booking) {
                 $individualParticipants += 1;
                 if ($booking->payment_type === "Cash") {
                     $cashDonations += $booking->donation;
+                    if ($booking->user_id) {
+                        $id_list = array_column($userLeaderboard, 'id');
+                        $index = array_search($booking->user_id, $id_list);
+                        if ($index === false) {
+                            $user = User::findOrFail($booking->user_id);
+                            $user->individual_participants = 1;
+                            $user->group_participants = 0;
+                            $user->total_participants = 1;
+                            array_push($userLeaderboard, $user);
+                        } else {
+                            $userLeaderboard[$index]->individual_participants += 1;
+                            $userLeaderboard[$index]->total_participants += 1;
+                        }
+                    }
                 } else {
                     $onlineDonations += $booking->donation;
                 }
@@ -309,6 +346,20 @@ class BookingController extends Controller
             foreach ($groupBookings as $groupBooking) {
                 foreach ($groupBooking->bookingTShirts as $booking_t_shirt) {
                     $groupParticipants += $booking_t_shirt->quantity;
+                    if ($groupBooking->user_id) {
+                        $id_list = array_column($userLeaderboard, 'id');
+                        $index = array_search($groupBooking->user_id, $id_list);
+                        if ($index === false) {
+                            $user = User::findOrFail($groupBooking->user_id);
+                            $user->individual_participants = 0;
+                            $user->group_participants = $booking_t_shirt->quantity;
+                            $user->total_participants = $booking_t_shirt->quantity;
+                            array_push($userLeaderboard, $user);
+                        } else {
+                            $userLeaderboard[$index]->group_participants += $booking_t_shirt->quantity;
+                            $userLeaderboard[$index]->total_participants += $booking_t_shirt->quantity;
+                        }
+                    }
                 }
                 if ($groupBooking->payment_type === "Cash") {
                     $cashDonations += $groupBooking->donation;
@@ -328,6 +379,8 @@ class BookingController extends Controller
                 $tShirt->remaining = $remaining;
             }
 
+            $userLeaderboard = collect($userLeaderboard)->sortByDesc('total_participants')->values()->all();
+
             return response()->json([
                 'error' => false,
                 'message' => 'Successfully retrieved dashboard stats',
@@ -335,7 +388,8 @@ class BookingController extends Controller
                 'onlineDonations' => $onlineDonations,
                 'individualParticipants' => $individualParticipants,
                 'groupParticipants' => $groupParticipants,
-                'tShirts' => $tShirts
+                'tShirts' => $tShirts,
+                'userLeaderboard' => $userLeaderboard
             ]);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -603,6 +657,45 @@ ZvuD9+TwQDpMSJBRZwIDAQAB
         return response()->json([
             'error' => true,
             'message' => 'An error occurred while updating booking!',
+        ]);
+    }
+
+    public function checkin(Request $request, $id): JsonResponse
+    {
+        try {
+            $user = null;
+            $token = null;
+            if ($request->header('Authorization') && $request->header('Authorization') !== 'null') {
+                $token = $request->header('Authorization');
+            } elseif ($request->header('Token') && $request->header('Token') !== 'null') {
+                $token = $request->header('Token');
+            }
+            if ($token) {
+                $user = User::where('token', $token)->first();
+            }
+
+            $booking = Booking::findOrFail($id);
+            $booking->checkin = true;
+            $booking->checked_in_by = $user->id;
+            if ($booking->is_group) {
+                $booking->checkin_count = $request->checkin_count;
+            }
+            $booking->save();
+
+            return response()->json([
+                'error' => false,
+                'message' => 'Successfully checked in booking',
+                'booking' => Booking::where('id', $booking->id)
+                    ->with(['tShirt', 'bookingTShirts', 'bookingTShirts.tShirt'])
+                    ->first()
+            ]);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+        }
+        return response()->json([
+            'error' => true,
+            'message' => 'An error occurred while checking in booking!',
         ]);
     }
 

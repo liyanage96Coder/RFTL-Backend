@@ -52,6 +52,13 @@ ZvuD9+TwQDpMSJBRZwIDAQAB
                 } else {
                     return redirect('payment-failed');
                 }
+            } else {
+                Log::info("=========== Payment Validation Error ==========");
+                Log::info($payment);
+                Log::info($signature);
+                Log::info($customFields);
+                Log::info($value);
+                Log::info("=========== End ==========");
             }
         } catch (\Exception $e) {
             Log::error($e->getMessage());

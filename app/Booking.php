@@ -13,6 +13,16 @@ class Booking extends Model
         'active'
     ];
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'is_group' => 'boolean',
+        'checkin' => 'boolean',
+    ];
+
     public function tShirt(): BelongsTo
     {
         return $this->belongsTo(TShirt::class, 't_shirt_id');
@@ -26,5 +36,10 @@ class Booking extends Model
     public function payment(): HasOne
     {
         return $this->hasOne(BookingPayment::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }
