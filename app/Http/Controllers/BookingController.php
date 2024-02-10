@@ -791,4 +791,23 @@ ZvuD9+TwQDpMSJBRZwIDAQAB
             'message' => 'An error occurred while downloading booking!',
         ]);
     }
+
+    public function confirm($id): JsonResponse
+    {
+        try {
+            $this->updateBookingStatus($id, "Confirmed");
+
+            return response()->json([
+                'error' => false,
+                'message' => 'Successfully confirmed booking',
+            ]);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+        }
+        return response()->json([
+            'error' => true,
+            'message' => 'An error occurred while confirming booking!',
+        ]);
+    }
 }
