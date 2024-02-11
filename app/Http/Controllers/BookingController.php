@@ -371,8 +371,11 @@ class BookingController extends Controller
             foreach ($tShirts as $tShirt) {
                 $remaining = $tShirt->quantity - count($tShirt->bookings);
                 $sum = BookingTShirt::select(DB::raw('sum(quantity) as used_quantity'))
-                    ->where('t_shirt_id', $tShirt->id)
-                    ->where('active', true)
+                    ->join('bookings', 'booking_id', '=', 'bookings.id')
+                    ->where('booking_t_shirts.t_shirt_id', $tShirt->id)
+                    ->where('booking_t_shirts.active', true)
+                    ->where('bookings.active', true)
+                    ->where('status', 'Confirmed')
                     ->get();
                 $remaining -= $sum[0]['used_quantity'];
                 unset($tShirt['bookings']);
