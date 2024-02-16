@@ -64,8 +64,8 @@ Route::group(["prefix" => 'booking'], function () {
     Route::get('/group/limit/{limit}', 'BookingController@getGroupLimited')->middleware(['tokenVerification', 'adminVerification']);
     Route::get('/admin/dashboard/', 'BookingController@getDashboard')->middleware(['tokenVerification', 'adminVerification']);
     Route::get('/confirm/{id}', 'BookingController@confirm')->middleware(['tokenVerification', 'adminVerification']);
-    Route::post('/', 'BookingController@create');
-    Route::post('/group/', 'BookingController@createGroup');
+    Route::post('/', 'BookingController@create')->middleware(['bookingStatusVerification']);
+    Route::post('/group/', 'BookingController@createGroup')->middleware(['bookingStatusVerification']);
     Route::post('/admin/', 'BookingController@adminCreate')->middleware(['tokenVerification']);
     Route::post('/admin/group', 'BookingController@adminGroupCreate')->middleware(['tokenVerification']);
     Route::delete('/{id}', 'BookingController@delete')->middleware(['tokenVerification', 'adminVerification']);
@@ -76,6 +76,11 @@ Route::group(["prefix" => 'booking'], function () {
 
 Route::group(["prefix" => 'booking-payment'], function () {
     Route::post('/', 'BookingPaymentController@paymentReceived');
+});
+
+Route::group(["prefix" => 'booking-status'], function () {
+    Route::get('/', 'BookingStatusController@get');
+    Route::post('/', 'BookingStatusController@update')->middleware(['tokenVerification', 'adminVerification']);
 });
 
 Route::group(["prefix" => 'user'], function () {
