@@ -47,6 +47,14 @@ class LoginController extends Controller
 
         if (Auth::attempt(['email' => $request->get('email'), 'password' => $request->get('password'), 'active' => 1])) {
             $user = $this->guard()->user()->load(['role']);
+
+            if ($user->role->name !== 'ADMIN') {
+                return response()->json([
+                    'error' => true,
+                    'message' => 'Login Disabled!',
+                ]);
+            }
+
             if (!$request->get('website')) {
                 $user->generateToken();
             }
