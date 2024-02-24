@@ -187,6 +187,92 @@ class BookingController extends Controller
         ]);
     }
 
+    function indexCheckedIn(Request $request): JsonResponse
+    {
+        try {
+            $user = null;
+            $bookings = array();
+            $token = null;
+            if ($request->header('Authorization') && $request->header('Authorization') !== 'null') {
+                $token = $request->header('Authorization');
+            } elseif ($request->header('Token') && $request->header('Token') !== 'null') {
+                $token = $request->header('Token');
+            }
+            if ($token) {
+                $user = User::where('token', $token)->first();
+                if ($user->role->name === "ADMIN") {
+                    $bookings = Booking::where('active', 1)
+                        ->where('is_group', false)
+                        ->where('checkin', true)
+                        ->with(['tShirt', 'user', 'payment', 'checkedInBy'])
+                        ->get();
+                } else {
+                    $bookings = Booking::where('active', 1)
+                        ->where('is_group', false)
+                        ->where('checkin', true)
+                        ->where('user_id', $user->id)
+                        ->with(['tShirt', 'user', 'payment', 'checkedInBy'])
+                        ->get();
+                }
+            }
+            return response()->json([
+                'error' => false,
+                'message' => 'Successfully retrieved bookings',
+                'bookings' => $bookings
+            ]);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+        }
+        return response()->json([
+            'error' => true,
+            'message' => 'An error occurred while getting bookings!',
+        ]);
+    }
+
+    function indexCheckedInGroup(Request $request): JsonResponse
+    {
+        try {
+            $user = null;
+            $bookings = array();
+            $token = null;
+            if ($request->header('Authorization') && $request->header('Authorization') !== 'null') {
+                $token = $request->header('Authorization');
+            } elseif ($request->header('Token') && $request->header('Token') !== 'null') {
+                $token = $request->header('Token');
+            }
+            if ($token) {
+                $user = User::where('token', $token)->first();
+                if ($user->role->name === "ADMIN") {
+                    $bookings = Booking::where('active', 1)
+                        ->where('is_group', true)
+                        ->where('checkin', true)
+                        ->with(['bookingTShirts', 'bookingTShirts.tShirt', 'user', 'payment', 'checkedInBy'])
+                        ->get();
+                } else {
+                    $bookings = Booking::where('active', 1)
+                        ->where('is_group', true)
+                        ->where('checkin', true)
+                        ->where('user_id', $user->id)
+                        ->with(['bookingTShirts', 'bookingTShirts.tShirt', 'user', 'payment', 'checkedInBy'])
+                        ->get();
+                }
+            }
+            return response()->json([
+                'error' => false,
+                'message' => 'Successfully retrieved bookings',
+                'bookings' => $bookings
+            ]);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+        }
+        return response()->json([
+            'error' => true,
+            'message' => 'An error occurred while getting bookings!',
+        ]);
+    }
+
     function user($userId): JsonResponse
     {
         try {

@@ -55,6 +55,8 @@ Route::group(["prefix" => 'booking'], function () {
     Route::get('/group/', 'BookingController@indexGroup')->middleware(['tokenVerification']);
     Route::get('/pending/', 'BookingController@indexPending')->middleware(['tokenVerification']);
     Route::get('/group/pending/', 'BookingController@indexPendingGroup')->middleware(['tokenVerification']);
+    Route::get('/checkin/', 'BookingController@indexCheckedIn')->middleware(['tokenVerification']);
+    Route::get('/group/checkin/', 'BookingController@indexCheckedInGroup')->middleware(['tokenVerification']);
     Route::get('/{id}', 'BookingController@get')->middleware(['tokenVerification', 'adminVerification']);
     Route::get('/user/{userId}', 'BookingController@user')->middleware(['tokenVerification', 'adminVerification']);
     Route::get('/reference/{reference}', 'BookingController@getBooking');

@@ -42,4 +42,9 @@ class Booking extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function checkedInBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'checked_in_by');
+    }
 }
